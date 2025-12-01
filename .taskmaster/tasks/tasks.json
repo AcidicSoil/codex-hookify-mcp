@@ -1,0 +1,536 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and Foundational Types",
+        "description": "Initialize the TypeScript project, install dependencies, and define the core data structures for rules and configuration, as specified in Phase 0 of the PRD. This establishes the foundation for all subsequent modules.",
+        "details": "Create a new Node.js project with TypeScript. Initialize `package.json` and install dependencies: `typescript`, `ts-node`, `@modelcontextprotocol/sdk`, `zod`, `gray-matter`. Set up `tsconfig.json` with strict mode. Implement the `src/types/rule.ts` module to define and export `Rule`, `Condition`, `EventType`, and `ActionType` interfaces/enums. Also, create the `src/config/env.ts` module to export a `getConfig()` function that reads `HOOKIFY_RULE_DIR` from environment variables with a fallback to `~/.codex/hookify`.",
+        "testStrategy": "Unit tests for `getConfig()` should mock `process.env` and `os.homedir()` to verify correct path resolution and fallback logic. Type-level tests or simple runtime checks can be used to ensure `EventType` and `ActionType` enums/unions contain the correct values. The build process should pass with TypeScript's `strict` mode enabled.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize TypeScript Project and Install Dependencies",
+            "description": "Set up the basic Node.js project structure by initializing package.json, installing all required development and production dependencies, and creating the initial source directory.",
+            "dependencies": [],
+            "details": "Run `npm init -y` to create a `package.json`. Install production dependencies `npm install @modelcontextprotocol/sdk zod gray-matter`. Install development dependencies `npm install -D typescript ts-node @types/node`. Create the `src/` directory.",
+            "status": "pending",
+            "testStrategy": "Verify that `package.json` is created and all dependencies are listed correctly. Running `npm install` should complete without errors."
+          },
+          {
+            "id": 2,
+            "title": "Configure TypeScript Build Options",
+            "description": "Create and configure the `tsconfig.json` file to define the project's build settings, including strict type-checking, module system, and input/output directories.",
+            "dependencies": [
+              1
+            ],
+            "details": "Generate a `tsconfig.json` file. Configure `compilerOptions` to enable `\"strict\": true`, set `\"module\": \"commonjs\"`, `\"target\": \"es2020\"`, `\"outDir\": \"./dist\"`, and `\"rootDir\": \"./src\"`. This ensures a robust and modern build setup.",
+            "status": "pending",
+            "testStrategy": "Create a dummy `index.ts` file in `src/`. Run `npx tsc` and verify that the command executes without errors and that a corresponding `.js` file is created in the `dist/` directory."
+          },
+          {
+            "id": 3,
+            "title": "Define Core Rule Data Structures and Types",
+            "description": "Implement the `src/types/rule.ts` module to define the fundamental TypeScript interfaces and enums for `Rule`, `Condition`, `EventType`, and `ActionType` which form the core data model.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create the file `src/types/rule.ts`. In this file, define and export the `Rule` interface, the `Condition` interface, and the `EventType` and `ActionType` string literal unions based on the PRD specifications.",
+            "status": "pending",
+            "testStrategy": "Run `npx tsc --noEmit` to perform a type-check. The command should pass, confirming that the type definitions are syntactically correct and well-formed."
+          },
+          {
+            "id": 4,
+            "title": "Implement Environment Configuration Loader",
+            "description": "Create the `src/config/env.ts` module to export a `getConfig()` function that reads the `HOOKIFY_RULE_DIR` environment variable, with a fallback to the default `~/.codex/hookify` directory.",
+            "dependencies": [
+              2
+            ],
+            "details": "In `src/config/env.ts`, import `os` and `path`. Implement and export a `getConfig()` function that reads `process.env.HOOKIFY_RULE_DIR`. If the variable is not set, it should use `os.homedir()` to construct the default path.",
+            "status": "pending",
+            "testStrategy": "Unit tests will be required. These tests should mock `process.env` and `os.homedir()` to verify that the function returns the correct path when the environment variable is set and when it falls back to the default."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement Rule Parsing and Validation",
+        "description": "Develop the logic to parse Hookify-style Markdown files with YAML frontmatter into structured `Rule` objects and validate them against the defined schema. This covers PRD features A1 and A3.",
+        "details": "Implement the `src/rules/ruleParser.ts` module. Use the `gray-matter` library to parse the content of a markdown file into YAML frontmatter (`data`) and a markdown body (`content`). Map the parsed data to a raw `Rule` object. Then, implement `src/rules/ruleValidator.ts`. This module will take a raw rule, apply defaults (`enabled: true`, `action: warn`, `event: all`), validate enum fields (`event`, `action`), and pre-compile any regex patterns for performance. Invalid rules should be rejected with clear error messages.",
+        "testStrategy": "Create a suite of unit tests with sample `.md` file content. Test cases should include: a perfectly formed rule, rules with missing optional fields (to check defaults), rules with invalid `event` or `action` values, and files with invalid YAML syntax. The validator should be tested to ensure it correctly returns a normalized `Rule` or a list of validation errors.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Rule Data Structures and Parser Skeleton",
+            "description": "Establish the TypeScript types for raw and validated rules and create the initial file structure for the rule parser module.",
+            "dependencies": [],
+            "details": "Create a `src/rules/types.ts` file defining the `RawRule` and `ValidatedRule` interfaces. Then, create the `src/rules/ruleParser.ts` file and export a placeholder function `parseRule(fileContent: string): RawRule`.",
+            "status": "pending",
+            "testStrategy": "Type definitions will be validated by the TypeScript compiler. No runtime tests are needed for this structural setup task."
+          },
+          {
+            "id": 2,
+            "title": "Implement Frontmatter Parsing using gray-matter",
+            "description": "In `ruleParser.ts`, implement the logic to parse a markdown string using `gray-matter`, extracting the YAML frontmatter and markdown content into a `RawRule` object.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use the `gray-matter` library within the `parseRule` function. Map the `data` property from the `gray-matter` output to the fields of the `RawRule` object, and the `content` property to the rule's description field. Handle potential YAML syntax errors.",
+            "status": "pending",
+            "testStrategy": "Unit test the `parseRule` function with various string inputs: a valid file, a file with invalid YAML frontmatter, and a file with no frontmatter. Verify that the output `RawRule` object is correct or that an appropriate error is thrown."
+          },
+          {
+            "id": 3,
+            "title": "Implement Rule Validator with Defaults and Enum Checks",
+            "description": "Create the `src/rules/ruleValidator.ts` module to normalize a `RawRule` object by applying default values and validating enum fields.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement a `validateRule(rawRule: RawRule): ValidatedRule` function. This function should apply defaults (`enabled: true`, `action: 'warn'`, `event: 'all'`) if they are not provided. It must also validate that `action` and `event` fields contain only permitted values, throwing a clear error for invalid inputs.",
+            "status": "pending",
+            "testStrategy": "Unit test the `validateRule` function. Provide `RawRule` objects that are missing optional fields to ensure defaults are applied correctly. Also, provide objects with invalid `event` and `action` values to confirm that validation errors are thrown."
+          },
+          {
+            "id": 4,
+            "title": "Add Regex Pre-compilation to the Rule Validator",
+            "description": "Extend the rule validator to find and pre-compile any regex patterns within the rule's conditions for improved performance during evaluation.",
+            "dependencies": [
+              3
+            ],
+            "details": "Modify the `validateRule` function in `src/rules/ruleValidator.ts`. After basic validation, inspect the rule's conditions. If a condition involves a regex pattern (e.g., a string value in a `matches` field), attempt to compile it into a `RegExp` object and store it in the `ValidatedRule`. Throw an error if the regex is invalid.",
+            "status": "pending",
+            "testStrategy": "Update unit tests for `validateRule`. Pass a rule containing a valid regex pattern and assert that the output `ValidatedRule` contains a `RegExp` object. Pass a rule with an invalid regex (e.g., unclosed parenthesis) and assert that a specific validation error is thrown."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Create Filesystem Rule Store",
+        "description": "Implement the `ruleStore` module to manage the lifecycle of rules on the filesystem, including loading, saving, and updating rules. This module will handle interactions with the rule directory and support compatibility with different file layouts.",
+        "details": "Implement the `src/rules/ruleStore.ts` module. Create a `loadRules()` function that reads all `.md` files from the directories specified by `getConfig()`, uses the `ruleParser` and `ruleValidator` to process them, and returns an in-memory list of valid `Rule` objects. Implement `writeRule(rule)` to serialize a `Rule` object back into a Markdown file with frontmatter. Implement `updateRuleEnabled(name, enabled)` to find a rule, modify its `enabled` status in the file's frontmatter, and save it. Ensure writes are atomic (write to a temp file, then rename).",
+        "testStrategy": "Integration tests using a temporary directory. The tests should: create mock rule files, call `loadRules()` and assert the correct rules are loaded and invalid ones are skipped. Test `writeRule` and `updateRuleEnabled` by calling them and then reading the file back from the temp directory to verify its contents are correct. Test compatibility by loading from both `~/.codex/hookify` and `.claude/hookify.*` style paths.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement 'loadRules' to Load and Validate Rules from Filesystem",
+            "description": "Create the `loadRules` function within `src/rules/ruleStore.ts`. This function will scan specified directories for `.md` rule files, read their content, and use the existing `ruleParser` and `ruleValidator` modules to process them into a list of valid in-memory `Rule` objects.",
+            "dependencies": [],
+            "details": "Implement the `loadRules()` function in `src/rules/ruleStore.ts`. It should get rule directories from `getConfig()`, find all `.md` files recursively, read each file's content, and pass it to the parser and validator. Invalid or unparseable rules should be logged and skipped.",
+            "status": "pending",
+            "testStrategy": "Unit tests will mock the filesystem (`fs` module) to provide sample valid and invalid rule files. Assert that `loadRules` correctly calls the parser and validator and returns only the valid `Rule` objects."
+          },
+          {
+            "id": 2,
+            "title": "Implement 'writeRule' to Serialize and Save a New Rule",
+            "description": "Implement the `writeRule(rule: Rule)` function in `src/rules/ruleStore.ts`. This function will take a `Rule` object, serialize it into a Markdown file with YAML frontmatter, and save it to the primary rule directory.",
+            "dependencies": [],
+            "details": "The function must serialize the rule's metadata into a valid YAML frontmatter block using a library like `js-yaml`. This block, followed by the rule's markdown body, will be written to a new file. The filename should be derived from the rule's name (e.g., `my-new-rule.md`).",
+            "status": "pending",
+            "testStrategy": "Unit tests will involve passing a `Rule` object to `writeRule` and asserting that the mocked `fs.writeFile` is called with the correctly formatted string content (YAML frontmatter + markdown body) and the correct file path."
+          },
+          {
+            "id": 3,
+            "title": "Implement Atomic 'updateRuleEnabled' Function",
+            "description": "Implement the `updateRuleEnabled(name: string, enabled: boolean)` function. This function must locate the corresponding rule file, update its `enabled` status in the frontmatter, and save the changes atomically to prevent data corruption during the write process.",
+            "dependencies": [
+              1
+            ],
+            "details": "To ensure atomicity, the implementation must first write the updated file content to a temporary file in the same directory. If the write is successful, use an atomic `fs.rename` operation to replace the original file with the temporary file.",
+            "status": "pending",
+            "testStrategy": "Unit tests will mock the `fs` module to verify the atomic write sequence: `fs.writeFile` to a temp path, followed by `fs.rename` to the final path. Test edge cases like the original file not existing."
+          },
+          {
+            "id": 4,
+            "title": "Create Integration Tests for the Filesystem Rule Store",
+            "description": "Develop a suite of integration tests for the `ruleStore` module. These tests will verify the end-to-end functionality of loading, writing, and updating rules by interacting with a real temporary filesystem directory.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Use Node's `fs.mkdtemp` to create a temporary directory before each test. The test suite will perform a sequence of operations: create files, call `loadRules`, `writeRule`, and `updateRuleEnabled`, and then read files back from the disk to assert the state is correct. Ensure the temporary directory is cleaned up after tests.",
+            "status": "pending",
+            "testStrategy": "The test runner will execute these integration tests against a live (but temporary) filesystem. Success is defined by all assertions passing and proper cleanup of temporary directories and files after the test suite completes."
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Develop Shell Command Evaluation Engine",
+        "description": "Build the core logic that evaluates a given shell command against a set of rules to produce a decision (`allow`, `warn`, `block`). This covers PRD features B1 and B2.",
+        "details": "Implement the `src/engine/conditionMatcher.ts` module. It should export a function `matchConditions(rule, context)` that evaluates a rule's `conditions` array against a context object (e.g., `{ command: '...' }`). Support operators: `regex_match`, `contains`, `not_contains`, `equals`. Then, implement `src/engine/shellEvaluator.ts` with a function `evaluateShell(command, rules)`. This function will filter for `bash` or `all` event rules, check the `pattern` and `conditions` for each, and aggregate the results. A single `block` action wins over all else. If no blocks, any `warn` action results in a `warn`. Otherwise, `allow`.",
+        "testStrategy": "Use table-driven unit tests for `conditionMatcher` to cover all operators with positive and negative cases. For `shellEvaluator`, create unit tests with various combinations of rules (no matches, one warn, one block, multiple warns, warn + block) to ensure the aggregation logic is correct and the decision hierarchy (`block` > `warn` > `allow`) is respected. Test against a corpus of safe and dangerous command examples.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement `conditionMatcher` with Basic String Operators",
+            "description": "Create the `src/engine/conditionMatcher.ts` module and implement the `matchConditions` function to support the 'equals', 'contains', and 'not_contains' operators. This function will be the foundation for evaluating rule conditions.",
+            "dependencies": [],
+            "details": "Create the file `src/engine/conditionMatcher.ts` exporting a `matchConditions(rule, context)` function. This function will iterate through the `conditions` array of a rule and evaluate them against the `context` object. Implement the logic for `equals`, `contains`, and `not_contains` operators.",
+            "status": "pending",
+            "testStrategy": "Use table-driven unit tests to verify the logic for 'equals', 'contains', and 'not_contains'. Include test cases where the condition should match, should not match, and where the context field is missing."
+          },
+          {
+            "id": 2,
+            "title": "Add `regex_match` Operator Support to `conditionMatcher`",
+            "description": "Extend the `conditionMatcher` to handle the `regex_match` operator. This involves parsing the regex string from a condition and testing it against the corresponding value in the evaluation context.",
+            "dependencies": [
+              1
+            ],
+            "details": "In `src/engine/conditionMatcher.ts`, update the `matchConditions` function to include a case for the `regex_match` operator. Ensure that the regex pattern provided in the condition is correctly applied to the value from the context (e.g., `context.command`).",
+            "status": "pending",
+            "testStrategy": "Add unit tests specifically for the `regex_match` operator. Test cases should cover simple matches, non-matches, matches with special characters, and edge cases like an empty string."
+          },
+          {
+            "id": 3,
+            "title": "Implement Core Logic for `shellEvaluator`",
+            "description": "Create the `src/engine/shellEvaluator.ts` module. Implement the main `evaluateShell` function to filter rules by event type, check the primary `pattern` match, and invoke the `conditionMatcher` for each relevant rule.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create `src/engine/shellEvaluator.ts` with an `evaluateShell(command, rules)` function. This function will first filter the input `rules` to only include those with `event: 'bash'` or `event: 'all'`. It will then iterate over this subset, checking if the command matches the rule's `pattern` and if its conditions are met by calling `matchConditions`.",
+            "status": "pending",
+            "testStrategy": "Create unit tests for `evaluateShell` that mock the `conditionMatcher`. Test that rules are correctly filtered by event type and that the `conditionMatcher` is called only for rules whose `pattern` matches the input command."
+          },
+          {
+            "id": 4,
+            "title": "Implement Decision Aggregation Logic in `shellEvaluator`",
+            "description": "Finalize the `evaluateShell` function by implementing the decision aggregation logic. The function must aggregate the results from all matching rules and produce a final decision based on the `block > warn > allow` hierarchy.",
+            "dependencies": [
+              3
+            ],
+            "details": "In `src/engine/shellEvaluator.ts`, collect the `action` of every fully matched rule. Implement the final decision logic: if any matched rule has `action: 'block'`, the final decision is 'block'. Otherwise, if any matched rule has `action: 'warn'`, the decision is 'warn'. If no rules match or all matching rules are 'allow', the decision is 'allow'.",
+            "status": "pending",
+            "testStrategy": "Write unit tests for `evaluateShell` using a variety of rule sets to verify the aggregation logic. Test scenarios must include: no matching rules (allow), a single warn rule (warn), a single block rule (block), and a mix of warn and block rules (block)."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Implement MCP Server Skeleton and Health Tool",
+        "description": "Set up the main MCP server process that listens on stdio and registers a basic health check tool. This task validates the core MCP integration and provides a starting point for adding other tools.",
+        "details": "In `src/mcp/server.ts`, use the `@modelcontextprotocol/sdk` to create a new `McpServer` instance with a `StdioServerTransport`. Create a main `run()` function that starts the server. Implement the `src/mcp/tools/healthTool.ts` module. This tool, named `hookify_health`, will take no input and return a JSON object with static info like version, configured rule directory, and a live count of loaded rules by calling the `ruleStore`.",
+        "testStrategy": "Create an integration test that runs the compiled server as a child process. The test will communicate with the server over its stdin/stdout, send a valid MCP request for the `hookify_health` tool, and assert that the response is a well-formed MCP message containing the expected JSON payload with server status and rule count.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement MCP Server Skeleton with Stdio Transport",
+            "description": "Set up the basic server process in `src/mcp/server.ts` using the `@modelcontextprotocol/sdk`. This will create the main server instance and configure it to communicate over standard input/output.",
+            "dependencies": [],
+            "details": "In the `src/mcp/server.ts` file, import `McpServer` and `StdioServerTransport`. Create a main `run()` function that instantiates the server with the stdio transport, but without any tools registered yet. The function should call `server.start()`.",
+            "status": "pending",
+            "testStrategy": "This will be tested by the integration test in a subsequent subtask. For now, manual verification involves running the process to ensure it doesn't crash on startup."
+          },
+          {
+            "id": 2,
+            "title": "Create the `hookify_health` Tool Module",
+            "description": "Implement the `hookify_health` tool in a new module. This tool will gather and return static and dynamic health information about the application, such as version and rule count.",
+            "dependencies": [],
+            "details": "Create the file `src/mcp/tools/healthTool.ts`. Define a tool named `hookify_health` that takes no input. The tool's execution logic should call the `ruleStore` to get a live count of loaded rules and combine it with static info like version into a JSON object.",
+            "status": "pending",
+            "testStrategy": "Unit test the tool's handler function in isolation. Mock the `ruleStore` dependency to provide a fake rule count and verify the tool returns the correctly structured JSON payload."
+          },
+          {
+            "id": 3,
+            "title": "Register Health Tool with the MCP Server",
+            "description": "Integrate the `hookify_health` tool with the MCP server skeleton, making it discoverable and executable through MCP requests.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Modify `src/mcp/server.ts`. Import the newly created `healthTool`. In the `run()` function, pass the health tool instance in the tools array when constructing the `McpServer`.",
+            "status": "pending",
+            "testStrategy": "Verification will be handled by the integration test in the next subtask, which will attempt to call this specific tool."
+          },
+          {
+            "id": 4,
+            "title": "Develop Integration Test for Server and Health Tool",
+            "description": "Create an integration test that launches the complete MCP server as a child process and verifies basic communication by successfully invoking the `hookify_health` tool.",
+            "dependencies": [
+              3
+            ],
+            "details": "Create a new integration test file. Use Node.js's `child_process` module to spawn the compiled server executable. Write a valid MCP JSON-RPC request for the `hookify_health` tool to the child process's stdin. Read from stdout and parse the response, asserting it is a valid MCP message with the expected health data.",
+            "status": "pending",
+            "testStrategy": "This task itself is the implementation of the test strategy. The test will cover the server startup, stdio transport, tool registration, and tool execution in an end-to-end manner."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement `hookify_evaluate_shell` MCP Tool",
+        "description": "Expose the shell evaluation engine as an MCP tool, making it callable from `codex-cli`. This is the primary feature for the MVP.",
+        "details": "Implement `src/mcp/tools/evaluateShellTool.ts`. Define a `Zod` schema for the tool's input: `{ command: string }`. The tool implementation will call the `evaluateShell` function from the engine (Task 4) with the provided command and the currently loaded rules. The resulting `{ decision, messages, matched_rules }` object will be JSON-stringified and returned as the `text` content of the MCP response.",
+        "testStrategy": "Integration test using an MCP test harness. Start the server with a known set of rules in a temp directory. Call the `hookify_evaluate_shell` tool with various commands: one that should be allowed, one that should trigger a warning, and one that should be blocked. Assert that the JSON content of the tool's response matches the expected decision and messages for each case.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          5
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Zod Schema for `hookify_evaluate_shell` Input",
+            "description": "Create and export a Zod schema to validate the input for the `hookify_evaluate_shell` tool. This establishes a strict data contract for the tool's interface.",
+            "dependencies": [],
+            "details": "In the file `src/mcp/tools/evaluateShellTool.ts`, define a Zod object schema. This schema should enforce that the input is an object with a single required property: `command`, which must be a non-empty string.",
+            "status": "pending",
+            "testStrategy": "Unit test the Zod schema directly. Provide it with valid data (e.g., `{ \"command\": \"ls\" }`) and invalid data (e.g., `{}`, `{ \"command\": 123 }`) to assert that parsing succeeds or fails as expected."
+          },
+          {
+            "id": 2,
+            "title": "Implement Core Logic for `evaluateShellTool`",
+            "description": "Create the `evaluateShellTool` module, connecting the input schema to the shell evaluation engine. This subtask involves processing the validated input, calling the engine, and formatting the response.",
+            "dependencies": [
+              1
+            ],
+            "details": "In `src/mcp/tools/evaluateShellTool.ts`, create the tool handler function. This function will use the Zod schema from subtask 1. It will take the validated `command`, call the `evaluateShell` engine function (from Task 4) with the command and loaded rules, and then JSON-stringify the resulting `{ decision, messages, matched_rules }` object. This string will be the `text` content of the tool's response.",
+            "status": "pending",
+            "testStrategy": "Mock-based unit tests can be used to test the handler in isolation. Mock the `evaluateShell` function to return predefined results and assert that the handler correctly formats and returns the MCP response object."
+          },
+          {
+            "id": 3,
+            "title": "Write Integration Tests for the Shell Evaluation Tool",
+            "description": "Develop an integration test suite using the MCP test harness to validate the end-to-end functionality of the `hookify_evaluate_shell` tool.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create a new integration test file. The test setup should start the MCP server with a temporary directory containing a known set of rules (e.g., a rule to block `rm -rf /` and another to warn on `git commit`). The test will then invoke the `hookify_evaluate_shell` tool with various commands and assert that the returned JSON payload contains the correct `decision` ('deny', 'warn', 'allow').",
+            "status": "pending",
+            "testStrategy": null
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Implement Rule Management MCP Tools",
+        "description": "Create a set of MCP tools (`hookify_list_rules`, `hookify_set_rule_enabled`, `hookify_create_rule`) to allow users to manage their rules directly from the Codex CLI.",
+        "details": "Implement three separate tool modules in `src/mcp/tools/`. `listRulesTool.ts`: Lists rules from `ruleStore`, returning a JSON array of rule metadata. `setRuleEnabledTool.ts`: Takes `{ name: string, enabled: boolean }`, calls `ruleStore.updateRuleEnabled`, and returns `{ ok: boolean, error?: string }`. `createRuleTool.ts`: Takes rule parameters (`name`, `event`, etc.), validates them, constructs a `Rule` object, and calls `ruleStore.writeRule`, returning `{ ok: true, file: string }`. Use `Zod` for all input validation.",
+        "testStrategy": "End-to-end integration tests using the MCP harness. The test sequence should: 1. Call `create_rule`. 2. Call `list_rules` and verify the new rule is present. 3. Call `set_rule_enabled` to disable it. 4. Check the corresponding file on disk to see if the frontmatter was updated. 5. Call `list_rules` again to confirm the enabled status changed. Test failure cases like creating a duplicate rule or enabling a non-existent rule.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          5
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement `hookify_list_rules` MCP Tool",
+            "description": "Create the MCP tool that lists all rules currently managed by the `ruleStore`. The tool should return a JSON array of rule metadata without requiring any input.",
+            "dependencies": [],
+            "details": "Create the file `src/mcp/tools/listRulesTool.ts`. This tool will interface with the `ruleStore` (from Task 3) to fetch all loaded rules and will format them into a JSON array string for the MCP response.",
+            "status": "pending",
+            "testStrategy": "Unit test using a mocked `ruleStore` that provides a predefined list of rules. Verify that the tool correctly formats and returns this list as a JSON string."
+          },
+          {
+            "id": 2,
+            "title": "Implement `hookify_set_rule_enabled` MCP Tool",
+            "description": "Create the MCP tool to enable or disable a specific rule by name. It will take a rule name and a boolean `enabled` flag as input and modify the rule's file on disk.",
+            "dependencies": [],
+            "details": "Create `src/mcp/tools/setRuleEnabledTool.ts`. Define a Zod schema for the input `{ name: string, enabled: boolean }`. The tool will call `ruleStore.updateRuleEnabled(name, enabled)` and return a status object `{ ok: boolean, error?: string }`.",
+            "status": "pending",
+            "testStrategy": "Unit test with a mocked `ruleStore` to confirm the tool validates input correctly and calls the `updateRuleEnabled` function with the correct arguments. Test both success and failure cases (e.g., rule not found)."
+          },
+          {
+            "id": 3,
+            "title": "Implement `hookify_create_rule` MCP Tool",
+            "description": "Create the MCP tool for generating a new rule file from user-provided parameters. This involves significant input validation and file creation via the `ruleStore`.",
+            "dependencies": [],
+            "details": "Create `src/mcp/tools/createRuleTool.ts`. Define a comprehensive Zod schema for rule parameters (`name`, `event`, `conditions`, `action`, etc.). The tool will validate inputs, construct a valid `Rule` object, and call `ruleStore.writeRule(rule)`. On success, it returns `{ ok: true, file: string }`.",
+            "status": "pending",
+            "testStrategy": "Unit test using a mocked `ruleStore`. Focus on verifying that the Zod validation correctly rejects invalid inputs and that a properly structured `Rule` object is passed to `ruleStore.writeRule` for valid inputs."
+          },
+          {
+            "id": 4,
+            "title": "Create E2E Integration Test for Rule Management Tools",
+            "description": "Develop a comprehensive end-to-end test that verifies the combined functionality of the create, list, and set_enabled tools in a realistic sequence.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Using the MCP test harness against a temporary file system, the test will: 1. Call `hookify_create_rule`. 2. Call `hookify_list_rules` and assert the new rule exists. 3. Call `hookify_set_rule_enabled` to disable it. 4. Call `hookify_list_rules` again to verify the 'enabled' status changed. 5. Clean up created files.",
+            "status": "pending",
+            "testStrategy": "The test will be run as part of the main integration test suite. Success is defined by the test passing without errors and correctly asserting the state changes after each tool invocation."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Generate Codex Integration Snippets and Instructions",
+        "description": "Create helper modules to provide the necessary configuration and agent instructions for integrating the MCP server with `codex-cli`.",
+        "details": "Implement `src/integration/codexConfigSnippet.ts`. It will export a function `getCodexTomlSnippet(binaryPath)` that returns a formatted TOML string for `~/.codex/config.toml`, like `[mcp_servers.hookify]\ncommand = [\"node\", \"<binaryPath>\"]`. Next, implement `src/integration/agentInstructions.ts` to export a function `getAgentInstructions()` which returns a pre-defined string. This string should instruct the model to call `hookify_evaluate_shell` before executing shell commands and to respect the `block` and `warn` decisions.",
+        "testStrategy": "Unit tests for `getCodexTomlSnippet` to ensure it generates a valid, syntactically correct TOML string. Snapshot testing for `getAgentInstructions` to ensure the canonical instruction text does not change unexpectedly. Manually review the output for clarity and correctness.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Integration Module Files",
+            "description": "Set up the necessary file structure for the Codex integration helpers by creating the `src/integration` directory and the two required TypeScript modules: `codexConfigSnippet.ts` and `agentInstructions.ts`.",
+            "dependencies": [],
+            "details": "Create the directory `src/integration`. Inside this directory, create two empty files: `codexConfigSnippet.ts` and `agentInstructions.ts`. This provides the foundation for the integration logic.",
+            "status": "pending",
+            "testStrategy": "Verify that the files `src/integration/codexConfigSnippet.ts` and `src/integration/agentInstructions.ts` exist and the project's build process completes successfully."
+          },
+          {
+            "id": 2,
+            "title": "Implement the TOML Snippet Generator Function",
+            "description": "In `src/integration/codexConfigSnippet.ts`, implement the `getCodexTomlSnippet` function that generates a TOML configuration string for `codex-cli` based on a given binary path.",
+            "dependencies": [
+              1
+            ],
+            "details": "Export a function `getCodexTomlSnippet(binaryPath: string): string`. This function must return a formatted string literal: `[mcp_servers.hookify]\\ncommand = [\"node\", \"${binaryPath}\"]`.",
+            "status": "pending",
+            "testStrategy": "Manual invocation of the function with a test path to visually inspect the output string for correct format and path interpolation. Formal testing will be a separate task."
+          },
+          {
+            "id": 3,
+            "title": "Implement the Agent Instructions Generator Function",
+            "description": "In `src/integration/agentInstructions.ts`, implement the `getAgentInstructions` function that returns a pre-defined string of instructions for the Codex agent.",
+            "dependencies": [
+              1
+            ],
+            "details": "Export a function `getAgentInstructions(): string` that returns a constant string. The string should instruct the model to call `hookify_evaluate_shell` before executing shell commands and to respect `block` and `warn` decisions.",
+            "status": "pending",
+            "testStrategy": "Manually call the function and review the returned string to ensure it is clear, correct, and contains all necessary instructions for the agent."
+          },
+          {
+            "id": 4,
+            "title": "Add Unit Tests for `getCodexTomlSnippet`",
+            "description": "Create a new test file and write unit tests for the `getCodexTomlSnippet` function to validate its output format and correctness.",
+            "dependencies": [
+              2
+            ],
+            "details": "Create `src/integration/codexConfigSnippet.test.ts`. Write a test case that calls `getCodexTomlSnippet` with a mock path like '/path/to/binary.js' and asserts that the returned string is exactly `[mcp_servers.hookify]\\ncommand = [\"node\", \"/path/to/binary.js\"]`.",
+            "status": "pending",
+            "testStrategy": "Run the test suite and confirm that the test for `getCodexTomlSnippet` passes. Ensure the test covers the correct string formatting and variable interpolation."
+          },
+          {
+            "id": 5,
+            "title": "Add Snapshot Test for `getAgentInstructions`",
+            "description": "Create a snapshot test for the `getAgentInstructions` function to ensure the canonical instruction text does not change unexpectedly in the future.",
+            "dependencies": [
+              3
+            ],
+            "details": "Create `src/integration/agentInstructions.test.ts`. Use a testing framework like Jest to write a test that captures a snapshot of the output from `getAgentInstructions()`. The initial run will generate the snapshot file.",
+            "status": "pending",
+            "testStrategy": "On the first run, manually review the generated snapshot file to confirm the instruction text is correct. Subsequent test runs should pass, failing only if the instruction text is intentionally or unintentionally modified."
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Author User and Integration Documentation",
+        "description": "Create comprehensive documentation explaining the Hookify rule format and the steps required to integrate and use the `codex-hookify-mcp` server with the Codex CLI.",
+        "details": "Create and populate the `/docs` directory. `docs/hookify-format.md` should explain the rule file structure, YAML frontmatter fields (`name`, `event`, `action`, `pattern`, `conditions`), their allowed values, and how to write effective messages in the Markdown body. `docs/codex-integration.md` should provide a step-by-step guide for users: installation, generating and adding the TOML config snippet, and examples of interacting with the `hookify_*` tools through Codex.",
+        "testStrategy": "Manual peer review of the documentation for clarity, accuracy, and completeness. Follow the integration guide in a clean test environment to ensure the steps are correct and lead to a working setup. Check that all MVP tools and rule fields are documented.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Document the Hookify Rule Format",
+            "description": "Create a detailed document (`docs/hookify-format.md`) explaining the structure of Hookify rule files, including the YAML frontmatter fields, their allowed values, and how to write effective rule messages.",
+            "dependencies": [],
+            "details": "Create the file `docs/hookify-format.md`. This document must explain the file structure, detailing each YAML frontmatter field (`name`, `event`, `action`, `pattern`, `conditions`) with examples. It should also specify the allowed values and syntax, and guide the user on writing clear messages in the Markdown body.",
+            "status": "pending",
+            "testStrategy": "Peer review the document for technical accuracy, clarity, and completeness. Verify that all rule fields and options as implemented in the codebase are correctly documented."
+          },
+          {
+            "id": 2,
+            "title": "Create Codex CLI Integration Guide",
+            "description": "Write a step-by-step user guide (`docs/codex-integration.md`) that walks a user through installing, configuring, and using the `codex-hookify-mcp` server with the Codex CLI.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create the file `docs/codex-integration.md`. The guide must include instructions for server installation, generating and adding the TOML config snippet to `~/.codex/config.toml`, and provide examples of interacting with the `hookify_*` tools through the Codex CLI.",
+            "status": "pending",
+            "testStrategy": "Follow the integration guide in a clean test environment to ensure all steps are accurate and result in a functional setup. Verify that the instructions align with the helper modules from Task 8."
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Implement Generic Event Evaluator for Extensibility",
+        "description": "Refactor the evaluation engine to support different event types (e.g., `file`, `prompt`) beyond just `bash`. This sets the foundation for future feature extensions and increases parity with Claude Code Hookify.",
+        "details": "Create a new module `src/engine/eventEvaluator.ts`. It should export a generic function `evaluateEvent(eventType, context, rules)`. The `context` will be a `Record<string, string>` (e.g., `{ command: '...' }` or `{ file_path: '...' }`). This function will reuse the `conditionMatcher` but apply it to the appropriate fields in the given context based on the rule's `conditions`. The existing `shellEvaluator` can be refactored to be a thin wrapper around this new generic evaluator, passing `eventType: 'bash'` and the correct context.",
+        "testStrategy": "Unit test `evaluateEvent` with mock event types and contexts (e.g., a fake 'file' event with a `file_path` context property) to ensure the core logic is decoupled from the event type. Verify that the refactored `shellEvaluator` still passes all its original tests, confirming no regressions were introduced.",
+        "priority": "low",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Generic `evaluateEvent` Function in New Module",
+            "description": "Create the new `src/engine/eventEvaluator.ts` module and implement the generic `evaluateEvent(eventType, context, rules)` function. This function will contain the core evaluation logic to be extracted from the existing `shellEvaluator`.",
+            "dependencies": [],
+            "details": "Implement a new function `evaluateEvent` in `src/engine/eventEvaluator.ts`. It will take an `eventType`, a `context` object, and the list of rules. The core logic for iterating rules and using the `conditionMatcher` on the context should be implemented here.",
+            "status": "pending",
+            "testStrategy": "Initial implementation will be tested in a subsequent task. The focus is on creating the function signature and moving the core logic. Static analysis and type-checking should pass."
+          },
+          {
+            "id": 2,
+            "title": "Refactor `shellEvaluator` to Delegate to `evaluateEvent`",
+            "description": "Modify the existing `shellEvaluator` to be a thin wrapper that calls the new generic `evaluateEvent` function. This decouples the shell-specific evaluation from the core logic.",
+            "dependencies": [
+              1
+            ],
+            "details": "Update the `shellEvaluator` function. It should now construct the context object (e.g., `{ command: '...' }`) from its inputs and then call `evaluateEvent` with `eventType: 'bash'` and the constructed context. Remove the duplicated evaluation logic.",
+            "status": "pending",
+            "testStrategy": "The primary test for this step is to run the existing test suite for `shellEvaluator`. All tests should continue to pass, proving that the refactoring did not introduce any regressions."
+          },
+          {
+            "id": 3,
+            "title": "Update and Expand Test Suite for Generic Evaluation",
+            "description": "Enhance the test suite to cover both the refactored `shellEvaluator` and the new generic `evaluateEvent` function. This includes adding tests for new, non-bash event types.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Create a new test file for `eventEvaluator.ts`. Add unit tests that call `evaluateEvent` directly with mock rules and various contexts, including a new event type like 'file' with a context like `{ file_path: '...' }`. Verify the refactored `shellEvaluator` still passes all its original tests.",
+            "status": "pending",
+            "testStrategy": "Use a unit testing framework like Jest. Create specific test cases for `evaluateEvent` with different event types to ensure it is truly generic. Confirm 100% of the original `shellEvaluator` tests still pass."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-12-01T05:08:33.123Z",
+      "updated": "2025-12-01T05:08:33.123Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

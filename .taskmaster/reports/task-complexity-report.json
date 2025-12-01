@@ -1,0 +1,93 @@
+{
+	"meta": {
+		"generatedAt": "2025-12-01T05:15:21.091Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 10,
+		"analysisCount": 10,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Project Setup and Foundational Types",
+			"complexityScore": 3,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the project setup into distinct steps: initializing the project and build configuration (package.json, tsconfig.json), defining core data structures (rule.ts), implementing the environment configuration loader (env.ts), and setting up the initial testing framework.",
+			"reasoning": "This task is foundational but involves standard, well-documented procedures. The complexity is low, primarily consisting of boilerplate setup for a TypeScript project. The main points of attention are configuring `tsconfig.json` for strict mode and correctly mocking Node.js APIs (`process.env`, `os`) for unit tests, which adds minor complexity."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Implement Rule Parsing and Validation",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Decompose the rule processing logic into two main parts: a file parser that uses `gray-matter` to extract frontmatter and content, and a rule validator that normalizes the raw data by applying defaults, validating against the schema (e.g., enums), and preparing the rule for use by pre-compiling regex.",
+			"reasoning": "This task involves data transformation and validation, which requires careful handling of edge cases. While `gray-matter` simplifies parsing, the validation logic (applying defaults, checking enums, handling invalid inputs, pre-compiling regex) introduces moderate complexity. Robust error reporting for malformed rules is a key requirement, increasing the implementation effort."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Create Filesystem Rule Store",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the rule store implementation into key file operations: a function to load and validate all rules from a directory, a function to serialize and write a new rule to a file, a function to atomically update an existing rule file (e.g., via temp file and rename), and the integration tests to verify these filesystem interactions.",
+			"reasoning": "This task has moderate complexity due to its direct interaction with the filesystem, which is inherently stateful and prone to errors (e.g., permissions). It orchestrates the parser and validator. The requirement for atomic writes for updates adds a layer of technical challenge beyond simple file I/O. Integration testing against a temp directory is also more involved than simple unit tests."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Develop Shell Command Evaluation Engine",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Structure the evaluation engine by creating two main components: a `conditionMatcher` module responsible for evaluating a rule's specific conditions (e.g., regex_match, contains) against a context, and a `shellEvaluator` module that orchestrates the process of filtering relevant rules, running the matcher for each, and aggregating the results into a final decision according to the block > warn > allow hierarchy.",
+			"reasoning": "This is the core algorithmic logic of the service. The complexity lies in correctly implementing the decision aggregation hierarchy (`block` > `warn` > `allow`) and the various operators in the `conditionMatcher`. While the logic for any single part is straightforward, ensuring they work together correctly across all combinations of rules requires precision and comprehensive, table-driven unit testing."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Implement MCP Server Skeleton and Health Tool",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide the MCP server setup into these parts: implementing the main server process using the MCP SDK and stdio transport, creating the `hookify_health` tool module, registering the tool with the server, and developing an integration test that launches the server as a subprocess to verify basic communication.",
+			"reasoning": "The complexity here comes from integrating a new, specialized SDK (`@modelcontextprotocol/sdk`) and setting up an inter-process communication pattern (stdio). While the health tool's logic is simple, the setup of the server, transport, and the corresponding integration test (which must manage a child process and its streams) is non-trivial and has a learning curve."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement `hookify_evaluate_shell` MCP Tool",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down the implementation of the `hookify_evaluate_shell` tool into: defining the input schema using Zod, creating the tool module that wires the input to the existing shell evaluation engine, and writing integration tests that invoke the tool and assert the correct decision is returned for various commands.",
+			"reasoning": "This task is primarily about 'plumbing'—connecting the already-built evaluation engine (Task 4) to the MCP server infrastructure (Task 5). The core logic is already implemented. The complexity is in defining the strict data contract with Zod, ensuring proper data flow, and writing the integration tests to confirm the core feature works end-to-end via the MCP interface."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Implement Rule Management MCP Tools",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Decompose the rule management feature into three distinct MCP tools: one for listing rules, one for enabling/disabling a rule, and one for creating a new rule from parameters. Additionally, create a comprehensive end-to-end test that verifies the combined functionality of these tools in a sequence (e.g., create, list, update, list again).",
+			"reasoning": "This task is more complex than Task 6 because it involves creating three distinct tools that manipulate filesystem state. The `create_rule` tool has significant input validation requirements. The main complexity driver is the need for a comprehensive end-to-end test suite that verifies the entire lifecycle of a rule, asserting state changes on the filesystem, which is significantly more involved than testing a single read-only tool."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Generate Codex Integration Snippets and Instructions",
+			"complexityScore": 1,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "This task is simple and does not require further breakdown. Implement the two functions for generating the TOML snippet and agent instructions in their respective modules as described.",
+			"reasoning": "This task has very low complexity. It involves creating functions that return formatted strings, one of which is likely a static constant. The implementation is trivial and requires no complex logic or external dependencies. Testing is also straightforward with unit or snapshot tests."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Author User and Integration Documentation",
+			"complexityScore": 3,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Divide the documentation effort into two main articles: one document explaining the Hookify rule format in detail, and a second document providing a step-by-step user guide for integrating the server with Codex CLI.",
+			"reasoning": "While not a coding task, writing high-quality technical documentation is a non-trivial effort that requires a holistic understanding of the system. The complexity score reflects the time and attention to detail needed to produce clear, accurate, and complete content for two separate documents covering both the rule syntax and the integration process. The main challenge is clarity and accuracy, not technical difficulty."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Implement Generic Event Evaluator for Extensibility",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down the refactoring into these steps: first, create the new generic `evaluateEvent` function and move the core evaluation logic into it; second, refactor the existing `shellEvaluator` to delegate to the new generic function; finally, update and expand the test suite to cover both the refactored shell evaluation and a new generic event case.",
+			"reasoning": "This is a refactoring task of moderate complexity. The challenge lies in carefully extracting the generic logic from the existing `shellEvaluator` into a new `evaluateEvent` function without introducing regressions. A strong existing test suite is critical for safety. The task requires careful code surgery rather than greenfield development, and the risk of breaking existing functionality is the primary source of complexity."
+		}
+	]
+}
