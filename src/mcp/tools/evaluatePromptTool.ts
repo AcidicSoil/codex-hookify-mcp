@@ -2,15 +2,18 @@ import { McpServer } from '@modelcontextprotocol/sdk/server';
 import { z } from 'zod';
 import { evaluateRules } from '../../engine/eventEvaluator';
 
-export function registerEvaluateShellTool(server: McpServer) {
+export function registerEvaluatePromptTool(server: McpServer) {
   server.tool(
-    'hookify_evaluate_shell',
-    'Evaluates a shell command against the loaded rules.',
+    'hookify_evaluate_prompt',
+    'Evaluates a user prompt against the loaded rules.',
     {
-      command: z.string().describe('The shell command to evaluate'),
+      user_prompt: z.string(),
     },
-    async ({ command }) => {
-      const result = await evaluateRules({ type: 'bash', command });
+    async ({ user_prompt }) => {
+      const result = await evaluateRules({
+        type: 'prompt',
+        user_prompt,
+      });
       return {
         content: [
           {

@@ -2,12 +2,20 @@
 import { runMain as _runMain, defineCommand } from 'citty';
 import { version } from '../package.json';
 import { createServer, startServer, stopServer } from './server';
+import { McpServer } from '@modelcontextprotocol/sdk/server';
+
+// Tool Imports
 import { registerHealthTool } from './mcp/tools/healthTool';
 import { registerEvaluateShellTool } from './mcp/tools/evaluateShellTool';
+import { registerEvaluateFileTool } from './mcp/tools/evaluateFileTool';
+import { registerEvaluatePromptTool } from './mcp/tools/evaluatePromptTool';
+import { registerEvaluateStopTool } from './mcp/tools/evaluateStopTool';
 import { registerListRulesTool } from './mcp/tools/listRulesTool';
 import { registerSetRuleEnabledTool } from './mcp/tools/setRuleEnabledTool';
 import { registerCreateRuleTool } from './mcp/tools/createRuleTool';
-import { McpServer } from '@modelcontextprotocol/sdk/server';
+import { registerDeleteRuleTool } from './mcp/tools/deleteRuleTool';
+import { registerHelpTool } from './mcp/tools/helpTool';
+
 
 const cli = defineCommand({
   meta: {
@@ -32,9 +40,14 @@ const cli = defineCommand({
     // Register all the tools
     registerHealthTool(mcp as McpServer);
     registerEvaluateShellTool(mcp as McpServer);
+    registerEvaluateFileTool(mcp as McpServer);
+    registerEvaluatePromptTool(mcp as McpServer);
+    registerEvaluateStopTool(mcp as McpServer);
     registerListRulesTool(mcp as McpServer);
     registerSetRuleEnabledTool(mcp as McpServer);
     registerCreateRuleTool(mcp as McpServer);
+    registerDeleteRuleTool(mcp as McpServer);
+    registerHelpTool(mcp as McpServer);
 
     if (mode === 'http') {
       await startServer(mcp as McpServer, { type: 'http', port: Number(args.port), endpoint: args.endpoint });

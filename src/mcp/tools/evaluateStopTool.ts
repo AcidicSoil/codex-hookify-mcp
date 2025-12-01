@@ -2,15 +2,18 @@ import { McpServer } from '@modelcontextprotocol/sdk/server';
 import { z } from 'zod';
 import { evaluateRules } from '../../engine/eventEvaluator';
 
-export function registerEvaluateShellTool(server: McpServer) {
+export function registerEvaluateStopTool(server: McpServer) {
   server.tool(
-    'hookify_evaluate_shell',
-    'Evaluates a shell command against the loaded rules.',
+    'hookify_evaluate_stop',
+    'Evaluates a stop event against the loaded rules.',
     {
-      command: z.string().describe('The shell command to evaluate'),
+      transcript: z.string(),
     },
-    async ({ command }) => {
-      const result = await evaluateRules({ type: 'bash', command });
+    async ({ transcript }) => {
+      const result = await evaluateRules({
+        type: 'stop',
+        transcript,
+      });
       return {
         content: [
           {

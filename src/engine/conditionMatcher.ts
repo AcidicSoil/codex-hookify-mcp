@@ -1,4 +1,4 @@
-import { Rule, Condition } from '../types/rule';
+import { Rule, Condition, OperatorType } from '../types/rule';
 
 function matchCondition(condition: Condition, context: Record<string, string>): boolean {
   const value = context[condition.field] || '';
@@ -19,17 +19,18 @@ function matchCondition(condition: Condition, context: Record<string, string>): 
       return !value.includes(pattern);
     case 'equals':
       return value === pattern;
+    case 'starts_with':
+        return value.startsWith(pattern);
+    case 'ends_with':
+        return value.endsWith(pattern);
     default:
       return false;
   }
 }
 
 export function matchConditions(rule: Rule, context: Record<string, string>): boolean {
-  if (!rule.conditions || rule.conditions.length === 0) {
-    // If a pattern exists, it's the primary matcher. If not, lack of conditions means no match.
-    return !!rule.pattern;
-  }
-
-  // All conditions must be met
-  return rule.conditions.every(condition => matchCondition(condition, context));
+    if (!rule.conditions || rule.conditions.length === 0) {
+        return false;
+    }
+    return rule.conditions.every(condition => matchCondition(condition, context));
 }
