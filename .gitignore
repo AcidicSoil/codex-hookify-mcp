@@ -48,4 +48,8 @@ dev-debug.log
 /.codex/config.toml.bak
 /AGENTS.md
 /AGENTS.md.bak
+/src/.codex/config.toml
+/src/.codex/config.toml.bak
+/src/AGENTS.md
+/src/AGENTS.md.bak
 # END Ruler Generated Files
