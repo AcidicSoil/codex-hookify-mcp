@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """PreToolUse hook executor for hookify plugin.
 
-This script is called by codex-cli Code before any tool executes.
-It reads .codex-cli/hookify.*.local.md files and evaluates rules.
+This script is called by codex before any tool executes.
+It reads .codex/hookify.*.local.md files and evaluates rules.
 """
 
+import json
 import os
 import sys
-import json
 
 # CRITICAL: Add plugin root to Python path for imports
 # We need to add the parent of the plugin directory so Python can find "hookify" package
-PLUGIN_ROOT = os.environ.get('CLAUDE_PLUGIN_ROOT')
+PLUGIN_ROOT = os.environ.get('CODEX_PLUGIN_ROOT')
 if PLUGIN_ROOT:
     # Add the parent directory of the plugin
     parent_dir = os.path.dirname(PLUGIN_ROOT)

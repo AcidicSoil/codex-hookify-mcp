@@ -12,7 +12,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 1. **SDK Installation and Configuration**:
 
-   - Verify `@anthropic-ai/codex-cli-agent-sdk` is installed
+   - Verify `@anthropic-ai/codex-agent-sdk` is installed
    - Check that the SDK version is reasonably current (not ancient)
    - Confirm package.json has `"type": "module"` for ES modules support
    - Validate that Node.js version requirements are met (check package.json engines field if present)
@@ -26,7 +26,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 3. **SDK Usage and Patterns**:
 
-   - Verify correct imports from `@anthropic-ai/codex-cli-agent-sdk`
+   - Verify correct imports from `@anthropic-ai/codex-agent-sdk`
    - Check that agents are properly initialized according to SDK docs
    - Validate that agent configuration follows SDK patterns (system prompts, models, etc.)
    - Ensure SDK methods are called correctly with proper parameters
@@ -94,7 +94,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 2. **Check SDK Documentation Adherence**:
 
-   - Use WebFetch to reference the official TypeScript SDK docs: https://docs.claude.com/en/api/agent-sdk/typescript
+   - Use WebFetch to reference the official TypeScript SDK docs: <https://docs.claude.com/en/api/agent-sdk/typescript>
    - Compare the implementation against official patterns and recommendations
    - Note any deviations from documented best practices
 

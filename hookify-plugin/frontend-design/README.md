@@ -4,7 +4,7 @@ Generates distinctive, production-grade frontend interfaces that avoid generic A
 
 ## What It Does
 
-codex-cli automatically uses this skill for frontend work. Creates production-ready code with:
+codex automatically uses this skill for frontend work. Creates production-ready code with:
 
 - Bold aesthetic choices
 - Distinctive typography and color palettes
@@ -19,7 +19,7 @@ codex-cli automatically uses this skill for frontend work. Creates production-re
 "Design a settings panel with dark mode"
 ```
 
-codex-cli will choose a clear aesthetic direction and implement production code with meticulous attention to detail.
+codex will choose a clear aesthetic direction and implement production code with meticulous attention to detail.
 
 ## Learn More
 
@@ -27,5 +27,5 @@ See the [Frontend Aesthetics Cookbook](https://github.com/anthropics/claude-cook
 
 ## Authors
 
-Prithvi Rajasekaran (prithvi@anthropic.com)
-Alexander Bricken (alexander@anthropic.com)
+Prithvi Rajasekaran (<prithvi@anthropic.com>)
+Alexander Bricken (<alexander@anthropic.com>)

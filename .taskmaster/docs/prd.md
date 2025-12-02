@@ -2,11 +2,11 @@
    ===========
 
 Problem:
-Claude Code’s plugin ecosystem (specifically the `hookify` safety plugin) is only available inside Claude Code. Codex CLI users cannot reuse their existing hook rules or benefit from the same safety/guardrail behavior (e.g., blocking or warning on dangerous shell commands) because there is no MCP-based equivalent wired into `codex-cli`.
+Claude Code’s plugin ecosystem (specifically the `hookify` safety plugin) is only available inside Claude Code. Codex CLI users cannot reuse their existing hook rules or benefit from the same safety/guardrail behavior (e.g., blocking or warning on dangerous shell commands) because there is no MCP-based equivalent wired into `codex`.
 
 Who has the problem:
 
-* Power users of `codex-cli` who run shell commands and file edits from the assistant.
+* Power users of `codex` who run shell commands and file edits from the assistant.
 * Teams with existing `.claude/hookify.*.local.md` rules who want parity across tools.
 * Org/platform owners who need centralized, explainable guardrails on AI-initiated actions.
 
@@ -26,7 +26,7 @@ Product to build:
 
   * Implements a Hookify-compatible rule model (YAML frontmatter + Markdown body).
   * Evaluates shell commands (MVP) and eventually file/prompt events against those rules.
-  * Exposes this behavior via MCP tools for `codex-cli`.
+  * Exposes this behavior via MCP tools for `codex`.
   * Optionally exports rules into Codex execpolicy for hard enforcement.
 
 Success metrics (initial release):
@@ -180,7 +180,7 @@ Brief: Determine allow/warn/block decisions by applying rules to candidate actio
 
 ## Capability C: MCP Tool Surface
 
-Brief: Expose rule evaluation and management via MCP tools usable from `codex-cli`.
+Brief: Expose rule evaluation and management via MCP tools usable from `codex`.
 
 #### Feature C1 (MVP): `hookify_evaluate_shell` Tool
 
@@ -418,6 +418,7 @@ Module definitions:
   ```text
   src/config/env.ts
   ```
+
 * Exports:
 
   * `getConfig()` – returns `{ ruleDir, compatibilityMode, logLevel }`.
@@ -431,6 +432,7 @@ Module definitions:
   ```text
   src/types/rule.ts
   ```
+
 * Exports:
 
   * `Rule` – core rule type.
@@ -446,6 +448,7 @@ Module definitions:
   ```text
   src/rules/ruleParser.ts
   ```
+
 * Exports:
 
   * `parseRuleFile(content: string, filePath: string): Rule`.
@@ -459,6 +462,7 @@ Module definitions:
   ```text
   src/rules/ruleValidator.ts
   ```
+
 * Exports:
 
   * `validateRule(raw: Rule): { rule?: Rule; errors?: string[] }`.
@@ -472,6 +476,7 @@ Module definitions:
   ```text
   src/rules/ruleStore.ts
   ```
+
 * Exports:
 
   * `loadRules(options?): Rule[]`.
@@ -488,6 +493,7 @@ Module definitions:
   ```text
   src/engine/conditionMatcher.ts
   ```
+
 * Exports:
 
   * `matchConditions(rule: Rule, ctx: Record<string, string>): boolean`.
@@ -501,6 +507,7 @@ Module definitions:
   ```text
   src/engine/shellEvaluator.ts
   ```
+
 * Exports:
 
   * `evaluateShell(command: string, rules: Rule[]): EvaluationResult`.
@@ -514,6 +521,7 @@ Module definitions:
   ```text
   src/engine/eventEvaluator.ts
   ```
+
 * Exports:
 
   * `evaluateEvent(eventType: EventType, ctx: Record<string,string>, rules: Rule[]): EvaluationResult`.
@@ -527,6 +535,7 @@ Module definitions:
   ```text
   src/mcp/tools/evaluateShellTool.ts
   ```
+
 * Exports:
 
   * `registerEvaluateShellTool(server: McpServer)`.
@@ -540,6 +549,7 @@ Module definitions:
   ```text
   src/mcp/tools/listRulesTool.ts
   ```
+
 * Exports:
 
   * `registerListRulesTool(server: McpServer)`.
@@ -553,6 +563,7 @@ Module definitions:
   ```text
   src/mcp/tools/setRuleEnabledTool.ts
   ```
+
 * Exports:
 
   * `registerSetRuleEnabledTool(server: McpServer)`.
@@ -566,6 +577,7 @@ Module definitions:
   ```text
   src/mcp/tools/createRuleTool.ts
   ```
+
 * Exports:
 
   * `registerCreateRuleTool(server: McpServer)`.
@@ -579,6 +591,7 @@ Module definitions:
   ```text
   src/mcp/tools/healthTool.ts
   ```
+
 * Exports:
 
   * `registerHealthTool(server: McpServer)`.
@@ -592,6 +605,7 @@ Module definitions:
   ```text
   src/mcp/server.ts
   ```
+
 * Exports:
 
   * `run()` – entrypoint to start MCP server over stdio.
@@ -605,6 +619,7 @@ Module definitions:
   ```text
   src/integration/codexConfigSnippet.ts
   ```
+
 * Exports:
 
   * `getCodexTomlSnippet(binaryPath: string): string`.
@@ -618,6 +633,7 @@ Module definitions:
   ```text
   src/integration/agentInstructions.ts
   ```
+
 * Exports:
 
   * `getAgentInstructions(): string`.
@@ -631,6 +647,7 @@ Module definitions:
   ```text
   src/index.ts
   ```
+
 * Exports:
 
   * `run()`.
@@ -1010,7 +1027,7 @@ Delivers: Extended parity with Claude Hookify and deeper Codex integration.
 
 Personas:
 
-* Individual developer using `codex-cli` to run shell commands and edits with AI assistance.
+* Individual developer using `codex` to run shell commands and edits with AI assistance.
 * Team lead / DevOps engineer responsible for enforcing command safety rules.
 * Platform/security engineer consolidating guardrails across multiple tools.
 
@@ -1231,7 +1248,7 @@ Integration points:
 
 * MCP handshake; Codex tool discovery.
 
-### End-to-End (E2E):
+### End-to-End (E2E)
 
 * Start MCP server; configure Codex in a test environment; verify:
 

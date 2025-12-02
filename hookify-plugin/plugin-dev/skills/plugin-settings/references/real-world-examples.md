@@ -1,12 +1,12 @@
 # Real-World Plugin Settings Examples
 
-Detailed analysis of how production plugins use the `.codex-cli/plugin-name.local.md` pattern.
+Detailed analysis of how production plugins use the `.codex/plugin-name.local.md` pattern.
 
 ## multi-agent-swarm Plugin
 
 ### Settings File Structure
 
-**.codex-cli/multi-agent-swarm.local.md:**
+**.codex/multi-agent-swarm.local.md:**
 
 ```markdown
 ---
@@ -51,7 +51,7 @@ Report status to 'team-leader' session.
 #!/bin/bash
 set -euo pipefail
 
-SWARM_STATE_FILE=".codex-cli/multi-agent-swarm.local.md"
+SWARM_STATE_FILE=".codex/multi-agent-swarm.local.md"
 
 # Quick exit if no swarm active
 if [[ ! -f "$SWARM_STATE_FILE" ]]; then
@@ -86,6 +86,7 @@ exit 0
 ```
 
 **Key patterns:**
+
 1. **Quick exit** (line 7-9): Returns immediately if file doesn't exist
 2. **Field extraction** (lines 11-17): Parses each frontmatter field
 3. **Enabled check** (lines 19-21): Respects enabled flag
@@ -98,7 +99,7 @@ exit 0
 Settings files are created during swarm launch with:
 
 ```bash
-cat > "$WORKTREE_PATH/.codex-cli/multi-agent-swarm.local.md" <<EOF
+cat > "$WORKTREE_PATH/.codex/multi-agent-swarm.local.md" <<EOF
 ---
 agent_name: $AGENT_NAME
 task_number: $TASK_ID
@@ -122,15 +123,15 @@ PR number updated after PR creation:
 ```bash
 # Update pr_number field
 sed "s/^pr_number: .*/pr_number: $PR_NUM/" \
-  ".codex-cli/multi-agent-swarm.local.md" > temp.md
-mv temp.md ".codex-cli/multi-agent-swarm.local.md"
+  ".codex/multi-agent-swarm.local.md" > temp.md
+mv temp.md ".codex/multi-agent-swarm.local.md"
 ```
 
 ## ralph-wiggum Plugin
 
 ### Settings File Structure
 
-**.codex-cli/ralph-loop.local.md:**
+**.codex/ralph-loop.local.md:**
 
 ```markdown
 ---
@@ -142,14 +143,14 @@ started_at: "2025-01-15T14:30:00Z"
 
 Fix all the linting errors in the project.
 Make sure tests pass after each fix.
-Document any changes needed in CLAUDE.md.
+Document any changes needed in CODEX.md.
 ```
 
 ### How It's Used
 
 **File:** `hooks/stop-hook.sh`
 
-**Purpose:** Prevent session exit and loop codex-cli's output back as input
+**Purpose:** Prevent session exit and loop codex's output back as input
 
 **Implementation:**
 
@@ -157,7 +158,7 @@ Document any changes needed in CLAUDE.md.
 #!/bin/bash
 set -euo pipefail
 
-RALPH_STATE_FILE=".codex-cli/ralph-loop.local.md"
+RALPH_STATE_FILE=".codex/ralph-loop.local.md"
 
 # Quick exit if no active loop
 if [[ ! -f "$RALPH_STATE_FILE" ]]; then
@@ -219,6 +220,7 @@ exit 0
 ```
 
 **Key patterns:**
+
 1. **Quick exit** (line 7-9): Skip if not active
 2. **Iteration tracking** (lines 11-20): Count and enforce max iterations
 3. **Promise detection** (lines 25-33): Check for completion signal in output
@@ -237,7 +239,7 @@ MAX_ITERATIONS="${2:-0}"
 COMPLETION_PROMISE="${3:-}"
 
 # Create state file
-cat > ".codex-cli/ralph-loop.local.md" <<EOF
+cat > ".codex/ralph-loop.local.md" <<EOF
 ---
 iteration: 1
 max_iterations: $MAX_ITERATIONS
@@ -248,14 +250,14 @@ started_at: "$(date -Iseconds)"
 $PROMPT
 EOF
 
-echo "Ralph loop initialized: .codex-cli/ralph-loop.local.md"
+echo "Ralph loop initialized: .codex/ralph-loop.local.md"
 ```
 
 ## Pattern Comparison
 
 | Feature | multi-agent-swarm | ralph-wiggum |
 |---------|-------------------|--------------|
-| **File** | `.codex-cli/multi-agent-swarm.local.md` | `.codex-cli/ralph-loop.local.md` |
+| **File** | `.codex/multi-agent-swarm.local.md` | `.codex/ralph-loop.local.md` |
 | **Purpose** | Agent coordination state | Loop iteration state |
 | **Frontmatter** | Agent metadata | Loop configuration |
 | **Body** | Task assignment | Prompt to loop |
@@ -333,10 +335,10 @@ fi
 
 ```bash
 # BAD
-FILE="/Users/alice/.codex-cli/my-plugin.local.md"
+FILE="/Users/alice/.codex/my-plugin.local.md"
 
 # GOOD
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 ```
 
 ### ❌ Unquoted Variables
@@ -385,7 +387,8 @@ awk '/^---$/{i++; next} i>=2'  # For body
 
 ## Conclusion
 
-The `.codex-cli/plugin-name.local.md` pattern provides:
+The `.codex/plugin-name.local.md` pattern provides:
+
 - Simple, human-readable configuration
 - Version-control friendly (gitignored)
 - Per-project settings

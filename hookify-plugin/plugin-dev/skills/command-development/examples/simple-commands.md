@@ -2,11 +2,11 @@
 
 Basic slash command patterns for common use cases.
 
-**Important:** All examples below are written as instructions FOR codex-cli (agent consumption), not messages TO users. Commands tell codex-cli what to do, not tell users what will happen.
+**Important:** All examples below are written as instructions FOR codex (agent consumption), not messages TO users. Commands tell codex what to do, not tell users what will happen.
 
 ## Example 1: Code Review Command
 
-**File:** `.codex-cli/commands/review.md`
+**File:** `.codex/commands/review.md`
 
 ```markdown
 ---
@@ -35,6 +35,7 @@ Provide specific feedback with file and line references.
 ```
 
 **Usage:**
+
 ```
 > /review
 ```
@@ -43,7 +44,7 @@ Provide specific feedback with file and line references.
 
 ## Example 2: Security Review Command
 
-**File:** `.codex-cli/commands/security-review.md`
+**File:** `.codex/commands/security-review.md`
 
 ```markdown
 ---
@@ -78,6 +79,7 @@ Prioritize issues by severity.
 ```
 
 **Usage:**
+
 ```
 > /security-review
 ```
@@ -86,7 +88,7 @@ Prioritize issues by severity.
 
 ## Example 3: Test Command with File Argument
 
-**File:** `.codex-cli/commands/test-file.md`
+**File:** `.codex/commands/test-file.md`
 
 ```markdown
 ---
@@ -109,6 +111,7 @@ If failures found, suggest fixes based on error messages.
 ```
 
 **Usage:**
+
 ```
 > /test-file src/utils/helpers.test.ts
 ```
@@ -117,7 +120,7 @@ If failures found, suggest fixes based on error messages.
 
 ## Example 4: Documentation Generator
 
-**File:** `.codex-cli/commands/document.md`
+**File:** `.codex/commands/document.md`
 
 ```markdown
 ---
@@ -154,6 +157,7 @@ Format as Markdown suitable for project documentation.
 ```
 
 **Usage:**
+
 ```
 > /document src/api/users.ts
 ```
@@ -162,7 +166,7 @@ Format as Markdown suitable for project documentation.
 
 ## Example 5: Git Status Summary
 
-**File:** `.codex-cli/commands/git-status.md`
+**File:** `.codex/commands/git-status.md`
 
 ```markdown
 ---
@@ -187,6 +191,7 @@ Provide:
 ```
 
 **Usage:**
+
 ```
 > /git-status
 ```
@@ -195,7 +200,7 @@ Provide:
 
 ## Example 6: Deployment Command
 
-**File:** `.codex-cli/commands/deploy.md`
+**File:** `.codex/commands/deploy.md`
 
 ```markdown
 ---
@@ -225,6 +230,7 @@ Proceed with deployment? (yes/no)
 ```
 
 **Usage:**
+
 ```
 > /deploy staging v1.2.3
 ```
@@ -233,7 +239,7 @@ Proceed with deployment? (yes/no)
 
 ## Example 7: Comparison Command
 
-**File:** `.codex-cli/commands/compare-files.md`
+**File:** `.codex/commands/compare-files.md`
 
 ```markdown
 ---
@@ -270,6 +276,7 @@ Present as structured comparison report.
 ```
 
 **Usage:**
+
 ```
 > /compare-files src/old-api.ts src/new-api.ts
 ```
@@ -278,7 +285,7 @@ Present as structured comparison report.
 
 ## Example 8: Quick Fix Command
 
-**File:** `.codex-cli/commands/quick-fix.md`
+**File:** `.codex/commands/quick-fix.md`
 
 ```markdown
 ---
@@ -305,6 +312,7 @@ Provide code changes with file paths and line numbers.
 ```
 
 **Usage:**
+
 ```
 > /quick-fix button not responding to clicks
 > /quick-fix typo in error message
@@ -314,7 +322,7 @@ Provide code changes with file paths and line numbers.
 
 ## Example 9: Research Command
 
-**File:** `.codex-cli/commands/research.md`
+**File:** `.codex/commands/research.md`
 
 ```markdown
 ---
@@ -350,6 +358,7 @@ Provide actionable guidance based on research.
 ```
 
 **Usage:**
+
 ```
 > /research error handling in async operations
 > /research API authentication patterns
@@ -359,7 +368,7 @@ Provide actionable guidance based on research.
 
 ## Example 10: Explain Code Command
 
-**File:** `.codex-cli/commands/explain.md`
+**File:** `.codex/commands/explain.md`
 
 ```markdown
 ---
@@ -400,6 +409,7 @@ Explain at level appropriate for junior engineer.
 ```
 
 **Usage:**
+
 ```
 > /explain src/utils/cache.ts
 > /explain AuthService.login

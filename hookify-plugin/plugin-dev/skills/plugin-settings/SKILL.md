@@ -1,17 +1,18 @@
 ---
 name: Plugin Settings
-description: This skill should be used when the user asks about "plugin settings", "store plugin configuration", "user-configurable plugin", ".local.md files", "plugin state files", "read YAML frontmatter", "per-project plugin settings", or wants to make plugin behavior configurable. Documents the .codex-cli/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.
+description: This skill should be used when the user asks about "plugin settings", "store plugin configuration", "user-configurable plugin", ".local.md files", "plugin state files", "read YAML frontmatter", "per-project plugin settings", or wants to make plugin behavior configurable. Documents the .codex/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.
 version: 0.1.0
 ---
 
-# Plugin Settings Pattern for codex-cli Code Plugins
+# Plugin Settings Pattern for codex Code Plugins
 
 ## Overview
 
-Plugins can store user-configurable settings and state in `.codex-cli/plugin-name.local.md` files within the project directory. This pattern uses YAML frontmatter for structured configuration and markdown content for prompts or additional context.
+Plugins can store user-configurable settings and state in `.codex/plugin-name.local.md` files within the project directory. This pattern uses YAML frontmatter for structured configuration and markdown content for prompts or additional context.
 
 **Key characteristics:**
-- File location: `.codex-cli/plugin-name.local.md` in project root
+
+- File location: `.codex/plugin-name.local.md` in project root
 - Structure: YAML frontmatter + markdown body
 - Purpose: Per-project plugin configuration and state
 - Usage: Read from hooks, commands, and agents
@@ -35,13 +36,14 @@ list_setting: ["item1", "item2"]
 This markdown body can contain:
 - Task descriptions
 - Additional instructions
-- Prompts to feed back to codex-cli
+- Prompts to feed back to codex
 - Documentation or notes
 ```
 
 ### Example: Plugin State File
 
-**.codex-cli/my-plugin.local.md:**
+**.codex/my-plugin.local.md:**
+
 ```markdown
 ---
 enabled: true
@@ -68,7 +70,7 @@ Contact @team-lead with questions.
 set -euo pipefail
 
 # Define state file path
-STATE_FILE=".codex-cli/my-plugin.local.md"
+STATE_FILE=".codex/my-plugin.local.md"
 
 # Quick exit if file doesn't exist
 if [[ ! -f "$STATE_FILE" ]]; then
@@ -109,7 +111,7 @@ allowed-tools: ["Read", "Bash"]
 # Process Command
 
 Steps:
-1. Check if settings exist at `.codex-cli/my-plugin.local.md`
+1. Check if settings exist at `.codex/my-plugin.local.md`
 2. Read configuration using Read tool
 3. Parse YAML frontmatter to extract settings
 4. Apply settings to processing logic
@@ -126,7 +128,7 @@ name: configured-agent
 description: Agent that adapts to project settings
 ---
 
-Check for plugin settings at `.codex-cli/my-plugin.local.md`.
+Check for plugin settings at `.codex/my-plugin.local.md`.
 If present, parse YAML frontmatter and adapt behavior according to:
 - enabled: Whether plugin is active
 - mode: Processing mode (strict, standard, lenient)
@@ -145,17 +147,20 @@ FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$FILE")
 ### Read Individual Fields
 
 **String fields:**
+
 ```bash
 VALUE=$(echo "$FRONTMATTER" | grep '^field_name:' | sed 's/field_name: *//' | sed 's/^"\(.*\)"$/\1/')
 ```
 
 **Boolean fields:**
+
 ```bash
 ENABLED=$(echo "$FRONTMATTER" | grep '^enabled:' | sed 's/enabled: *//')
 # Compare: if [[ "$ENABLED" == "true" ]]; then
 ```
 
 **Numeric fields:**
+
 ```bash
 MAX=$(echo "$FRONTMATTER" | grep '^max_value:' | sed 's/max_value: *//')
 # Use: if [[ $MAX -gt 100 ]]; then
@@ -178,7 +183,7 @@ Use settings file to control hook activation:
 
 ```bash
 #!/bin/bash
-STATE_FILE=".codex-cli/security-scan.local.md"
+STATE_FILE=".codex/security-scan.local.md"
 
 # Quick exit if not configured
 if [[ ! -f "$STATE_FILE" ]]; then
@@ -203,7 +208,8 @@ fi
 
 Store agent-specific state and configuration:
 
-**.codex-cli/multi-agent-swarm.local.md:**
+**.codex/multi-agent-swarm.local.md:**
+
 ```markdown
 ---
 agent_name: auth-agent
@@ -236,7 +242,8 @@ tmux send-keys -t "$COORDINATOR" "Agent $AGENT_NAME completed task" Enter
 
 ### Pattern 3: Configuration-Driven Behavior
 
-**.codex-cli/my-plugin.local.md:**
+**.codex/my-plugin.local.md:**
+
 ```markdown
 ---
 validation_level: strict
@@ -280,10 +287,10 @@ Commands can create settings files:
 
 Steps:
 1. Ask user for configuration preferences
-2. Create `.codex-cli/my-plugin.local.md` with YAML frontmatter
+2. Create `.codex/my-plugin.local.md` with YAML frontmatter
 3. Set appropriate values based on user input
 4. Inform user that settings are saved
-5. Remind user to restart codex-cli Code for hooks to recognize changes
+5. Remind user to restart codex Code for hooks to recognize changes
 ```
 
 ### Template Generation
@@ -293,7 +300,7 @@ Provide template in plugin README:
 ```markdown
 ## Configuration
 
-Create `.codex-cli/my-plugin.local.md` in your project:
+Create `.codex/my-plugin.local.md` in your project:
 
 \`\`\`markdown
 ---
@@ -307,7 +314,7 @@ max_retries: 3
 Your settings are active.
 \`\`\`
 
-After creating or editing, restart codex-cli Code for changes to take effect.
+After creating or editing, restart codex Code for changes to take effect.
 ```
 
 ## Best Practices
@@ -315,12 +322,14 @@ After creating or editing, restart codex-cli Code for changes to take effect.
 ### File Naming
 
 ✅ **DO:**
-- Use `.codex-cli/plugin-name.local.md` format
+
+- Use `.codex/plugin-name.local.md` format
 - Match plugin name exactly
 - Use `.local.md` suffix for user-local files
 
 ❌ **DON'T:**
-- Use different directory (not `.codex-cli/`)
+
+- Use different directory (not `.codex/`)
 - Use inconsistent naming
 - Use `.md` without `.local` (might be committed)
 
@@ -329,8 +338,8 @@ After creating or editing, restart codex-cli Code for changes to take effect.
 Always add to `.gitignore`:
 
 ```gitignore
-.codex-cli/*.local.md
-.codex-cli/*.local.json
+.codex/*.local.md
+.codex/*.local.json
 ```
 
 Document this in plugin README.
@@ -366,17 +375,17 @@ fi
 
 ### Restart Requirement
 
-**Important:** Settings changes require codex-cli Code restart.
+**Important:** Settings changes require codex Code restart.
 
 Document in your README:
 
 ```markdown
 ## Changing Settings
 
-After editing `.codex-cli/my-plugin.local.md`:
+After editing `.codex/my-plugin.local.md`:
 1. Save the file
-2. Exit codex-cli Code
-3. Restart: `codex-cli` or `cc`
+2. Exit codex Code
+3. Restart: `codex` or `cc`
 4. New settings will be loaded
 ```
 
@@ -417,6 +426,7 @@ fi
 ### Permissions
 
 Settings files should be:
+
 - Readable by user only (`chmod 600`)
 - Not committed to git
 - Not shared between users
@@ -425,7 +435,8 @@ Settings files should be:
 
 ### multi-agent-swarm Plugin
 
-**.codex-cli/multi-agent-swarm.local.md:**
+**.codex/multi-agent-swarm.local.md:**
+
 ```markdown
 ---
 agent_name: auth-implementation
@@ -444,6 +455,7 @@ Coordinate with auth-agent on shared types.
 ```
 
 **Hook usage (agent-stop-notification.sh):**
+
 - Checks if file exists (line 15-18: quick exit if not)
 - Parses frontmatter to get coordinator_session, agent_name, enabled
 - Sends notifications to coordinator if enabled
@@ -451,7 +463,8 @@ Coordinate with auth-agent on shared types.
 
 ### ralph-wiggum Plugin
 
-**.codex-cli/ralph-loop.local.md:**
+**.codex/ralph-loop.local.md:**
+
 ```markdown
 ---
 iteration: 1
@@ -464,6 +477,7 @@ Make sure tests pass after each fix.
 ```
 
 **Hook usage (stop-hook.sh):**
+
 - Checks if file exists (line 15-18: quick exit if not active)
 - Reads iteration count and max_iterations
 - Extracts completion_promise for loop termination
@@ -476,7 +490,7 @@ Make sure tests pass after each fix.
 
 ```
 project-root/
-└── .codex-cli/
+└── .codex/
     └── plugin-name.local.md
 ```
 
@@ -500,7 +514,7 @@ BODY=$(awk '/^---$/{i++; next} i>=2' "$FILE")
 ### Quick Exit Pattern
 
 ```bash
-if [[ ! -f ".codex-cli/my-plugin.local.md" ]]; then
+if [[ ! -f ".codex/my-plugin.local.md" ]]; then
   exit 0  # Not configured
 fi
 ```
@@ -535,10 +549,10 @@ To add settings to a plugin:
 
 1. Design settings schema (which fields, types, defaults)
 2. Create template file in plugin documentation
-3. Add gitignore entry for `.codex-cli/*.local.md`
+3. Add gitignore entry for `.codex/*.local.md`
 4. Implement settings parsing in hooks/commands
 5. Use quick-exit pattern (check file exists, check enabled field)
 6. Document settings in plugin README with template
-7. Remind users that changes require codex-cli Code restart
+7. Remind users that changes require codex Code restart
 
 Focus on keeping settings simple and providing good defaults when settings file doesn't exist.

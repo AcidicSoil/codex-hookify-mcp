@@ -2,7 +2,7 @@ You are building an MCP server that:
 
 * Loads and evaluates “hook” rules à la `plugins/hookify` in `claude-code`
 * Exposes that behavior as MCP tools
-* Is wired into `codex-cli` via `~/.codex/config.toml` so Codex can use it as if it were a Claude Code plugin
+* Is wired into `codex` via `~/.codex/config.toml` so Codex can use it as if it were a Claude Code plugin
 
 Start with a “Hookify for Codex” MCP server focused on shell safety (the `bash` event type), then extend to files/prompts later.
 
@@ -402,7 +402,7 @@ That is a complete MCP server exposing the minimum `hookify` behavior for shell 
 
 ---
 
-## 4. Wire the server into `codex-cli`
+## 4. Wire the server into `codex`
 
 Build the server:
 

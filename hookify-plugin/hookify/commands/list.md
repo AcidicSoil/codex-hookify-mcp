@@ -12,8 +12,9 @@ Show all configured hookify rules in the project.
 ## Steps
 
 1. Use Glob tool to find all hookify rule files:
+
    ```
-   pattern: ".codex-cli/hookify.*.local.md"
+   pattern: ".codex/hookify.*.local.md"
    ```
 
 2. For each file found:
@@ -36,6 +37,7 @@ Show all configured hookify rules in the project.
 ```
 
 4. For each rule, show a brief preview:
+
 ```
 ### warn-dangerous-rm
 **Event**: bash
@@ -43,10 +45,11 @@ Show all configured hookify rules in the project.
 **Message**: "⚠️ **Dangerous rm command detected!** This command could delete..."
 
 **Status**: ✅ Active
-**File**: .codex-cli/hookify.dangerous-rm.local.md
+**File**: .codex/hookify.dangerous-rm.local.md
 ```
 
 5. Add helpful footer:
+
 ```
 ---
 
@@ -70,13 +73,15 @@ You haven't created any hookify rules yet.
 
 To get started:
 1. Use `/hookify` to analyze conversation and create rules
-2. Or manually create `.codex-cli/hookify.my-rule.local.md` files
+2. Or manually create `.codex/hookify.my-rule.local.md` files
 3. See `/hookify:help` for documentation
 
 Example:
 ```
+
 /hookify Warn me when I use console.log
+
 ```
 
-Check `${CLAUDE_PLUGIN_ROOT}/examples/` for example rule files.
+Check `${CODEX_PLUGIN_ROOT}/examples/` for example rule files.
 ```

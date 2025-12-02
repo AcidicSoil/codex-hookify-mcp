@@ -56,6 +56,7 @@ Reply with your choice and I'll help complete the action.
 ```
 
 **Key features:**
+
 - Numbered steps for clarity
 - Bash execution for context
 - Decision points for user input
@@ -78,7 +79,7 @@ Creating deployment tracking file...
 Current branch: !`git branch --show-current`
 Latest commit: !`git log -1 --format=%H`
 
-Deployment state saved to `.codex-cli/deployment-state.local.md`:
+Deployment state saved to `.codex/deployment-state.local.md`:
 
 \`\`\`markdown
 ---
@@ -104,13 +105,14 @@ State saved. Run `/deploy-test` to continue.
 ```
 
 **Next command** (`/deploy-test`):
+
 ```markdown
 ---
 description: Run deployment tests
 allowed-tools: Read, Bash(npm:*)
 ---
 
-Reading deployment state from `.codex-cli/deployment-state.local.md`...
+Reading deployment state from `.codex/deployment-state.local.md`...
 
 Running tests: !`npm test`
 
@@ -120,6 +122,7 @@ Tests complete. Run `/deploy-build` to continue.
 ```
 
 **Pattern benefits:**
+
 - Persistent state across commands
 - Clear workflow progression
 - Safety checkpoints
@@ -196,6 +199,7 @@ Starting sequence...
 ```
 
 **Individual commands** are simple:
+
 - `/format-code` - Just formats
 - `/lint-code` - Just lints
 - `/test-all` - Just tests
@@ -283,7 +287,7 @@ Details:
 Store workflow state in plugin-specific files:
 
 ```markdown
-.codex-cli/plugin-name-workflow.local.md:
+.codex/plugin-name-workflow.local.md:
 
 ---
 workflow: deployment
@@ -320,9 +324,9 @@ description: Continue deployment workflow
 allowed-tools: Read, Write
 ---
 
-Reading workflow state from .codex-cli/plugin-name-workflow.local.md...
+Reading workflow state from .codex/plugin-name-workflow.local.md...
 
-Current stage: @.codex-cli/plugin-name-workflow.local.md
+Current stage: @.codex/plugin-name-workflow.local.md
 
 [Parse YAML frontmatter to determine next step]
 
@@ -343,7 +347,7 @@ allowed-tools: Read
 
 Checking for interrupted workflow...
 
-State file: @.codex-cli/plugin-name-workflow.local.md
+State file: @.codex/plugin-name-workflow.local.md
 
 **Workflow found:**
 - Started: [timestamp]
@@ -374,7 +378,7 @@ allowed-tools: Write
 
 Writing completion marker...
 
-Creating: .codex-cli/feature-complete.flag
+Creating: .codex/feature-complete.flag
 
 This signals other commands that feature is ready for:
 - Integration testing (/integration-test will auto-detect)
@@ -394,7 +398,7 @@ allowed-tools: Read, Bash(git:*)
 
 Checking for completed features...
 
-if [ -f .codex-cli/feature-complete.flag ]; then
+if [ -f .codex/feature-complete.flag ]; then
   Feature ready for release notes
 fi
 
@@ -415,7 +419,7 @@ allowed-tools: Read, Write, Bash
 
 Checking for active deployments...
 
-if [ -f .codex-cli/deployment.lock ]; then
+if [ -f .codex/deployment.lock ]; then
   ERROR: Deployment already in progress
   Started: [timestamp from lock file]
 
@@ -442,7 +446,7 @@ allowed-tools: Write, Bash
 Deployment complete.
 
 Removing deployment lock...
-rm .codex-cli/deployment.lock
+rm .codex/deployment.lock
 
 Ready for next deployment.
 ```
@@ -587,15 +591,15 @@ description: Workflow with checkpoints
 
 ## Checkpoint 1: Validation
 !`validate.sh`
-echo "checkpoint:validation" >> .codex-cli/deployment-checkpoints.log
+echo "checkpoint:validation" >> .codex/deployment-checkpoints.log
 
 ## Checkpoint 2: Build
 !`build.sh`
-echo "checkpoint:build" >> .codex-cli/deployment-checkpoints.log
+echo "checkpoint:build" >> .codex/deployment-checkpoints.log
 
 ## Checkpoint 3: Deploy
 !`deploy.sh`
-echo "checkpoint:deploy" >> .codex-cli/deployment-checkpoints.log
+echo "checkpoint:deploy" >> .codex/deployment-checkpoints.log
 
 If any step fails, resume with:
 /deployment-resume [last-successful-checkpoint]
@@ -660,7 +664,7 @@ timestamp: !`date -u +%Y-%m-%dT%H:%M:%SZ`
 ---
 \`\`\`
 
-Written to .codex-cli/deployment-state.local.md
+Written to .codex/deployment-state.local.md
 
 Next: Run /deployment-validate
 ```
@@ -673,7 +677,7 @@ description: Validate deployment
 allowed-tools: Read, Bash
 ---
 
-Reading state: @.codex-cli/deployment-state.local.md
+Reading state: @.codex/deployment-state.local.md
 
 Running validation...
 - Branch check: PASS
@@ -693,7 +697,7 @@ description: Execute deployment
 allowed-tools: Read, Bash, Write
 ---
 
-Reading state: @.codex-cli/deployment-state.local.md
+Reading state: @.codex/deployment-state.local.md
 
 Executing deployment to [environment]...
 
@@ -714,7 +718,7 @@ allowed-tools: Bash
 ---
 
 Removing deployment state...
-rm .codex-cli/deployment-state.local.md
+rm .codex/deployment-state.local.md
 
 Deployment workflow complete.
 ```

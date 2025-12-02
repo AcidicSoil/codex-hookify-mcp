@@ -1,10 +1,10 @@
 # Using MCP Tools in Commands and Agents
 
-Complete guide to using MCP tools effectively in codex-cli Code plugin commands and agents.
+Complete guide to using MCP tools effectively in codex Code plugin commands and agents.
 
 ## Overview
 
-Once an MCP server is configured, its tools become available with the prefix `mcp__plugin_<plugin-name>_<server-name>__<tool-name>`. Use these tools in commands and agents just like built-in codex-cli Code tools.
+Once an MCP server is configured, its tools become available with the prefix `mcp__plugin_<plugin-name>_<server-name>__<tool-name>`. Use these tools in commands and agents just like built-in codex Code tools.
 
 ## Tool Naming Convention
 
@@ -17,11 +17,13 @@ mcp__plugin_<plugin-name>_<server-name>__<tool-name>
 ### Examples
 
 **Asana plugin with asana server:**
+
 - `mcp__plugin_asana_asana__asana_create_task`
 - `mcp__plugin_asana_asana__asana_search_tasks`
 - `mcp__plugin_asana_asana__asana_get_project`
 
 **Custom plugin with database server:**
+
 - `mcp__plugin_myplug_database__query`
 - `mcp__plugin_myplug_database__execute`
 - `mcp__plugin_myplug_database__list_tables`
@@ -29,11 +31,13 @@ mcp__plugin_<plugin-name>_<server-name>__<tool-name>
 ### Discovering Tool Names
 
 **Use `/mcp` command:**
+
 ```bash
 /mcp
 ```
 
 This shows:
+
 - All available MCP servers
 - Tools provided by each server
 - Tool schemas and descriptions
@@ -86,6 +90,7 @@ allowed-tools: ["mcp__plugin_asana_asana__*"]
 ### Tool Usage in Command Instructions
 
 **Example command:**
+
 ```markdown
 ---
 description: Search and create Asana tasks
@@ -150,7 +155,8 @@ The agent has access to all Asana MCP tools without pre-approval.
 ### Agent Tool Access
 
 Agents have broader tool access than commands:
-- Can use any tool codex-cli determines is necessary
+
+- Can use any tool codex determines is necessary
 - Don't need pre-allowed lists
 - Should document which tools they typically use
 
@@ -214,6 +220,7 @@ Steps:
 Each MCP tool has a schema defining its parameters. View with `/mcp`.
 
 **Example schema:**
+
 ```json
 {
   "name": "asana_create_task",
@@ -241,10 +248,10 @@ Each MCP tool has a schema defining its parameters. View with `/mcp`.
 
 ### Calling Tools with Parameters
 
-codex-cli automatically structures tool calls based on schema:
+codex automatically structures tool calls based on schema:
 
 ```typescript
-// codex-cli generates this internally
+// codex generates this internally
 {
   toolName: "mcp__plugin_asana_asana__asana_create_task",
   input: {
@@ -315,6 +322,7 @@ Steps:
 ### Batching Requests
 
 **Good: Single query with filters**
+
 ```markdown
 Steps:
 1. Call mcp__plugin_api_server__search with filters:
@@ -325,6 +333,7 @@ Steps:
 ```
 
 **Avoid: Many individual queries**
+
 ```markdown
 Steps:
 1. For each item ID:
@@ -348,7 +357,7 @@ When tools don't depend on each other, call in parallel:
 
 ```markdown
 Steps:
-1. Make parallel calls (codex-cli handles this automatically):
+1. Make parallel calls (codex handles this automatically):
    - mcp__plugin_api_server__get_project
    - mcp__plugin_api_server__get_users
    - mcp__plugin_api_server__get_tags
@@ -361,6 +370,7 @@ Steps:
 ### User Experience
 
 **Provide feedback:**
+
 ```markdown
 Steps:
 1. Inform user: "Searching Asana tasks..."
@@ -370,6 +380,7 @@ Steps:
 ```
 
 **Handle long operations:**
+
 ```markdown
 Steps:
 1. Warn user: "This may take a minute..."
@@ -381,6 +392,7 @@ Steps:
 ### Error Messages
 
 **Good error messages:**
+
 ```
 ❌ "Could not create task. Please check:
    1. You're logged into Asana
@@ -389,6 +401,7 @@ Steps:
 ```
 
 **Poor error messages:**
+
 ```
 ❌ "Error: MCP tool returned 403"
 ```
@@ -396,6 +409,7 @@ Steps:
 ### Documentation
 
 **Document MCP tool usage in command:**
+
 ```markdown
 ## MCP Tools Used
 
@@ -412,14 +426,15 @@ Ensure you're authenticated to Asana before running this command.
 ### Local Testing
 
 1. **Configure MCP server** in `.mcp.json`
-2. **Install plugin locally** in `.codex-cli-plugin/`
+2. **Install plugin locally** in `.codex-plugin/`
 3. **Verify tools available** with `/mcp`
 4. **Test command** that uses tools
-5. **Check debug output**: `codex-cli --debug`
+5. **Check debug output**: `codex --debug`
 
 ### Test Scenarios
 
 **Test successful calls:**
+
 ```markdown
 Steps:
 1. Create test data in external service
@@ -428,6 +443,7 @@ Steps:
 ```
 
 **Test error cases:**
+
 ```markdown
 Steps:
 1. Test with missing authentication
@@ -437,6 +453,7 @@ Steps:
 ```
 
 **Test edge cases:**
+
 ```markdown
 Steps:
 1. Test with empty results
@@ -504,22 +521,25 @@ Steps:
 ### Tools Not Available
 
 **Check:**
+
 - MCP server configured correctly
 - Server connected (check `/mcp`)
 - Tool names match exactly (case-sensitive)
-- Restart codex-cli Code after config changes
+- Restart codex Code after config changes
 
 ### Tool Calls Failing
 
 **Check:**
+
 - Authentication is valid
 - Parameters match tool schema
 - Required parameters provided
-- Check `codex-cli --debug` logs
+- Check `codex --debug` logs
 
 ### Performance Issues
 
 **Check:**
+
 - Batching queries instead of individual calls
 - Caching results when appropriate
 - Not making unnecessary tool calls
@@ -528,6 +548,7 @@ Steps:
 ## Conclusion
 
 Effective MCP tool usage requires:
+
 1. **Understanding tool schemas** via `/mcp`
 2. **Pre-allowing tools** in commands appropriately
 3. **Handling errors gracefully**

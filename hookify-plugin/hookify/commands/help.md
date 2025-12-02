@@ -16,16 +16,17 @@ The hookify plugin makes it easy to create custom hooks that prevent unwanted be
 ### 1. Hook System
 
 Hookify installs generic hooks that run on these events:
+
 - **PreToolUse**: Before any tool executes (Bash, Edit, Write, etc.)
 - **PostToolUse**: After a tool executes
-- **Stop**: When codex-cli wants to stop working
+- **Stop**: When codex wants to stop working
 - **UserPromptSubmit**: When user submits a prompt
 
-These hooks read configuration files from `.codex-cli/hookify.*.local.md` and check if any rules match the current operation.
+These hooks read configuration files from `.codex/hookify.*.local.md` and check if any rules match the current operation.
 
 ### 2. Configuration Files
 
-Users create rules in `.codex-cli/hookify.{rule-name}.local.md` files:
+Users create rules in `.codex/hookify.{rule-name}.local.md` files:
 
 ```markdown
 ---
@@ -41,16 +42,18 @@ This command could delete important files. Please verify the path.
 ```
 
 **Key fields:**
+
 - `name`: Unique identifier for the rule
 - `enabled`: true/false to activate/deactivate
 - `event`: bash, file, stop, prompt, or all
 - `pattern`: Regex pattern to match
 
-The message body is what codex-cli sees when the rule triggers.
+The message body is what codex sees when the rule triggers.
 
 ### 3. Creating Rules
 
 **Option A: Use /hookify command**
+
 ```
 /hookify Don't use console.log in production files
 ```
@@ -58,9 +61,10 @@ The message body is what codex-cli sees when the rule triggers.
 This analyzes your request and creates the appropriate rule file.
 
 **Option B: Create manually**
-Create `.codex-cli/hookify.my-rule.local.md` with the format above.
+Create `.codex/hookify.my-rule.local.md` with the format above.
 
 **Option C: Analyze conversation**
+
 ```
 /hookify
 ```
@@ -77,6 +81,7 @@ Without arguments, hookify analyzes recent conversation to find behaviors you wa
 ## Example Use Cases
 
 **Prevent dangerous commands:**
+
 ```markdown
 ---
 name: block-chmod-777
@@ -89,6 +94,7 @@ Don't use chmod 777 - it's a security risk. Use specific permissions instead.
 ```
 
 **Warn about debugging code:**
+
 ```markdown
 ---
 name: warn-console-log
@@ -101,6 +107,7 @@ Console.log detected. Remember to remove debug logging before committing.
 ```
 
 **Require tests before stopping:**
+
 ```markdown
 ---
 name: require-tests
@@ -115,6 +122,7 @@ Did you run tests before finishing? Make sure `npm test` or equivalent was execu
 ## Pattern Syntax
 
 Use Python regex syntax:
+
 - `\s` - whitespace
 - `\.` - literal dot
 - `|` - OR
@@ -124,6 +132,7 @@ Use Python regex syntax:
 - `[abc]` - character class
 
 **Examples:**
+
 - `rm\s+-rf` - matches "rm -rf"
 - `console\.log\(` - matches "console.log("
 - `(eval|exec)\(` - matches "eval(" or "exec("
@@ -135,24 +144,27 @@ Use Python regex syntax:
 
 **Block or Warn**: Rules can either `block` operations (prevent execution) or `warn` (show message but allow). Set `action: block` or `action: warn` in the rule's frontmatter.
 
-**Rule Files**: Keep rules in `.codex-cli/hookify.*.local.md` - they should be git-ignored (add to .gitignore if needed).
+**Rule Files**: Keep rules in `.codex/hookify.*.local.md` - they should be git-ignored (add to .gitignore if needed).
 
 **Disable Rules**: Set `enabled: false` in frontmatter or delete the file.
 
 ## Troubleshooting
 
 **Hook not triggering:**
-- Check rule file is in `.codex-cli/` directory
+
+- Check rule file is in `.codex/` directory
 - Verify `enabled: true` in frontmatter
 - Confirm pattern is valid regex
 - Test pattern: `python3 -c "import re; print(re.search('your_pattern', 'test_text'))"`
 - Rules take effect immediately - no restart needed
 
 **Import errors:**
+
 - Check Python 3 is available: `python3 --version`
 - Verify hookify plugin is installed correctly
 
 **Pattern not matching:**
+
 - Test regex separately
 - Check for escaping issues (use unquoted patterns in YAML)
 - Try simpler pattern first, then refine
@@ -160,16 +172,17 @@ Use Python regex syntax:
 ## Getting Started
 
 1. Create your first rule:
+
    ```
    /hookify Warn me when I try to use rm -rf
    ```
 
 2. Try to trigger it:
-   - Ask codex-cli to run `rm -rf /tmp/test`
+   - Ask codex to run `rm -rf /tmp/test`
    - You should see the warning
 
-4. Refine the rule by editing `.codex-cli/hookify.warn-rm.local.md`
+4. Refine the rule by editing `.codex/hookify.warn-rm.local.md`
 
 5. Create more rules as you encounter unwanted behaviors
 
-For more examples, check the `${CLAUDE_PLUGIN_ROOT}/examples/` directory.
+For more examples, check the `${CODEX_PLUGIN_ROOT}/examples/` directory.

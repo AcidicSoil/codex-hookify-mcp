@@ -7,6 +7,7 @@ Easily create custom hooks to prevent unwanted behaviors by analyzing conversati
 The hookify plugin makes it simple to create hooks without editing complex `hooks.json` files. Instead, you create lightweight markdown configuration files that define patterns to watch for and messages to show when those patterns match.
 
 **Key features:**
+
 - 🎯 Analyze conversations to find unwanted behaviors automatically
 - 📝 Simple markdown configuration files with YAML frontmatter
 - 🔍 Regex pattern matching for powerful rules
@@ -21,13 +22,14 @@ The hookify plugin makes it simple to create hooks without editing complex `hook
 /hookify Warn me when I use rm -rf commands
 ```
 
-This analyzes your request and creates `.codex-cli/hookify.warn-rm.local.md`.
+This analyzes your request and creates `.codex/hookify.warn-rm.local.md`.
 
 ### 2. Test It Immediately
 
 **No restart needed!** Rules take effect on the very next tool use.
 
-Ask codex-cli to run a command that should trigger the rule:
+Ask codex to run a command that should trigger the rule:
+
 ```
 Run rm -rf /tmp/test
 ```
@@ -39,31 +41,39 @@ You should see the warning message immediately!
 ### Main Command: /hookify
 
 **With arguments:**
+
 ```
 /hookify Don't use console.log in TypeScript files
 ```
+
 Creates a rule from your explicit instructions.
 
 **Without arguments:**
+
 ```
 /hookify
 ```
+
 Analyzes recent conversation to find behaviors you've corrected or been frustrated by.
 
 ### Helper Commands
 
 **List all rules:**
+
 ```
 /hookify:list
 ```
 
 **Configure rules interactively:**
+
 ```
 /hookify:configure
 ```
+
 Enable/disable existing rules through an interactive interface.
 
 **Get help:**
+
 ```
 /hookify:help
 ```
@@ -72,7 +82,8 @@ Enable/disable existing rules through an interactive interface.
 
 ### Simple Rule (Single Pattern)
 
-`.codex-cli/hookify.dangerous-rm.local.md`:
+`.codex/hookify.dangerous-rm.local.md`:
+
 ```markdown
 ---
 name: block-dangerous-rm
@@ -91,12 +102,14 @@ This command could delete important files. Please:
 ```
 
 **Action field:**
+
 - `warn`: Shows warning but allows operation (default)
 - `block`: Prevents operation from executing (PreToolUse) or stops session (Stop events)
 
 ### Advanced Rule (Multiple Conditions)
 
-`.codex-cli/hookify.sensitive-files.local.md`:
+`.codex/hookify.sensitive-files.local.md`:
+
 ```markdown
 ---
 name: warn-sensitive-files
@@ -123,7 +136,7 @@ Ensure credentials are not hardcoded and file is in .gitignore.
 
 - **`bash`**: Triggers on Bash tool commands
 - **`file`**: Triggers on Edit, Write, MultiEdit tools
-- **`stop`**: Triggers when codex-cli wants to stop (for completion checks)
+- **`stop`**: Triggers when codex wants to stop (for completion checks)
 - **`prompt`**: Triggers on user prompt submission
 - **`all`**: Triggers on all events
 
@@ -140,6 +153,7 @@ Use Python regex syntax:
 | `chmod\s+777` | chmod 777 | chmod 777 file.txt |
 
 **Tips:**
+
 - Use `\s` for whitespace
 - Escape special chars: `\.` for literal dot
 - Use `|` for OR: `(foo|bar)`
@@ -166,7 +180,7 @@ This command can cause data loss. Operation blocked for safety.
 Please verify the exact path and use a safer approach.
 ```
 
-**This rule blocks the operation** - codex-cli will not be allowed to execute these commands.
+**This rule blocks the operation** - codex will not be allowed to execute these commands.
 
 ### Example 2: Warn About Debug Code
 
@@ -184,7 +198,7 @@ action: warn
 Remember to remove debugging statements before committing.
 ```
 
-**This rule warns but allows** - codex-cli sees the message but can still proceed.
+**This rule warns but allows** - codex sees the message but can still proceed.
 
 ### Example 3: Require Tests Before Stopping
 
@@ -205,7 +219,7 @@ conditions:
 Before stopping, please run tests to verify your changes work correctly.
 ```
 
-**This blocks codex-cli from stopping** if no test commands appear in the session transcript. Enable only when you want strict enforcement.
+**This blocks codex from stopping** if no test commands appear in the session transcript. Enable only when you want strict enforcement.
 
 ## Advanced Usage
 
@@ -244,18 +258,22 @@ Use environment variables instead of hardcoded values.
 ### Field Reference
 
 **For bash events:**
+
 - `command`: The bash command string
 
 **For file events:**
+
 - `file_path`: Path to file being edited
 - `new_text`: New content being added (Edit, Write)
 - `old_text`: Old content being replaced (Edit only)
 - `content`: File content (Write only)
 
 **For prompt events:**
+
 - `user_prompt`: The user's submitted prompt text
 
 **For stop events:**
+
 - Use general matching on session state
 
 ## Management
@@ -269,6 +287,7 @@ Edit the `.local.md` file and set `enabled: false`
 Set `enabled: true`
 
 **Or use interactive tool:**
+
 ```
 /hookify:configure
 ```
@@ -276,8 +295,9 @@ Set `enabled: true`
 ### Delete Rules
 
 Simply delete the `.local.md` file:
+
 ```bash
-rm .codex-cli/hookify.my-rule.local.md
+rm .codex/hookify.my-rule.local.md
 ```
 
 ### View All Rules
@@ -288,9 +308,10 @@ rm .codex-cli/hookify.my-rule.local.md
 
 ## Installation
 
-This plugin is part of the codex-cli Code Marketplace. It should be auto-discovered when the marketplace is installed.
+This plugin is part of the codex Code Marketplace. It should be auto-discovered when the marketplace is installed.
 
 **Manual testing:**
+
 ```bash
 cc --plugin-dir /path/to/hookify
 ```
@@ -303,22 +324,26 @@ cc --plugin-dir /path/to/hookify
 ## Troubleshooting
 
 **Rule not triggering:**
-1. Check rule file exists in `.codex-cli/` directory (in project root, not plugin directory)
+
+1. Check rule file exists in `.codex/` directory (in project root, not plugin directory)
 2. Verify `enabled: true` in frontmatter
 3. Test regex pattern separately
 4. Rules should work immediately - no restart needed
 5. Try `/hookify:list` to see if rule is loaded
 
 **Import errors:**
+
 - Ensure Python 3 is available: `python3 --version`
 - Check hookify plugin is installed
 
 **Pattern not matching:**
+
 - Test regex: `python3 -c "import re; print(re.search(r'pattern', 'text'))"`
 - Use unquoted patterns in YAML to avoid escaping issues
 - Start simple, then add complexity
 
 **Hook seems slow:**
+
 - Keep patterns simple (avoid complex regex)
 - Use specific event types (bash, file) instead of "all"
 - Limit number of active rules

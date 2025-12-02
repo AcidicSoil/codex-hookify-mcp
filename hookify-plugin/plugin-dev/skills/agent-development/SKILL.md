@@ -1,16 +1,17 @@
 ---
 name: Agent Development
-description: This skill should be used when the user asks to "create an agent", "add an agent", "write a subagent", "agent frontmatter", "when to use description", "agent examples", "agent tools", "agent colors", "autonomous agent", or needs guidance on agent structure, system prompts, triggering conditions, or agent development best practices for codex-cli Code plugins.
+description: This skill should be used when the user asks to "create an agent", "add an agent", "write a subagent", "agent frontmatter", "when to use description", "agent examples", "agent tools", "agent colors", "autonomous agent", or needs guidance on agent structure, system prompts, triggering conditions, or agent development best practices for codex Code plugins.
 version: 0.1.0
 ---
 
-# Agent Development for codex-cli Code Plugins
+# Agent Development for codex Code Plugins
 
 ## Overview
 
 Agents are autonomous subprocesses that handle complex, multi-step tasks independently. Understanding agent structure, triggering conditions, and system prompt design enables creating powerful autonomous capabilities.
 
 **Key concepts:**
+
 - Agents are FOR autonomous work, commands are FOR user-initiated actions
 - Markdown file format with YAML frontmatter
 - Triggering via description field with examples
@@ -68,12 +69,14 @@ Agent identifier used for namespacing and invocation.
 **Pattern:** Must start and end with alphanumeric
 
 **Good examples:**
+
 - `code-reviewer`
 - `test-generator`
 - `api-docs-writer`
 - `security-analyzer`
 
 **Bad examples:**
+
 - `helper` (too generic)
 - `-agent-` (starts/ends with hyphen)
 - `my_agent` (underscores not allowed)
@@ -81,22 +84,24 @@ Agent identifier used for namespacing and invocation.
 
 ### description (required)
 
-Defines when codex-cli should trigger this agent. **This is the most critical field.**
+Defines when codex should trigger this agent. **This is the most critical field.**
 
 **Must include:**
+
 1. Triggering conditions ("Use this agent when...")
 2. Multiple `<example>` blocks showing usage
 3. Context, user request, and assistant response in each example
 4. `<commentary>` explaining why agent triggers
 
 **Format:**
+
 ```
 Use this agent when [conditions]. Examples:
 
 <example>
 Context: [Scenario description]
 user: "[What user says]"
-assistant: "[How codex-cli should respond]"
+assistant: "[How codex should respond]"
 <commentary>
 [Why this agent is appropriate]
 </commentary>
@@ -106,6 +111,7 @@ assistant: "[How codex-cli should respond]"
 ```
 
 **Best practices:**
+
 - Include 2-4 concrete examples
 - Show proactive and reactive triggering
 - Cover different phrasings of same intent
@@ -117,10 +123,11 @@ assistant: "[How codex-cli should respond]"
 Which model the agent should use.
 
 **Options:**
+
 - `inherit` - Use same model as parent (recommended)
-- `sonnet` - codex-cli Sonnet (balanced)
-- `opus` - codex-cli Opus (most capable, expensive)
-- `haiku` - codex-cli Haiku (fast, cheap)
+- `sonnet` - codex Sonnet (balanced)
+- `opus` - codex Opus (most capable, expensive)
+- `haiku` - codex Haiku (fast, cheap)
 
 **Recommendation:** Use `inherit` unless agent needs specific model capabilities.
 
@@ -131,6 +138,7 @@ Visual identifier for agent in UI.
 **Options:** `blue`, `cyan`, `green`, `yellow`, `magenta`, `red`
 
 **Guidelines:**
+
 - Choose distinct colors for different agents in same plugin
 - Use consistent colors for similar agent types
 - Blue/cyan: Analysis, review
@@ -154,6 +162,7 @@ tools: ["Read", "Write", "Grep", "Bash"]
 **Best practice:** Limit tools to minimum needed (principle of least privilege)
 
 **Common tool sets:**
+
 - Read-only analysis: `["Read", "Grep", "Glob"]`
 - Code generation: `["Read", "Write", "Grep"]`
 - Testing: `["Read", "Bash", "Grep"]`
@@ -166,6 +175,7 @@ The markdown body becomes the agent's system prompt. Write in second person, add
 ### Structure
 
 **Standard template:**
+
 ```markdown
 You are [role] specializing in [domain].
 
@@ -198,6 +208,7 @@ Handle these situations:
 ### Best Practices
 
 ✅ **DO:**
+
 - Write in second person ("You are...", "You will...")
 - Be specific about responsibilities
 - Provide step-by-step process
@@ -207,6 +218,7 @@ Handle these situations:
 - Keep under 10,000 characters
 
 ❌ **DON'T:**
+
 - Write in first person ("I am...", "I will...")
 - Be vague or generic
 - Omit process steps
@@ -218,7 +230,7 @@ Handle these situations:
 
 ### Method 1: AI-Assisted Generation
 
-Use this prompt pattern (extracted from codex-cli Code):
+Use this prompt pattern (extracted from codex Code):
 
 ```
 Create an agent configuration based on this request: "[YOUR DESCRIPTION]"
@@ -267,6 +279,7 @@ See `examples/agent-creation-prompt.md` for complete template.
 ```
 
 **Rules:**
+
 - 3-50 characters
 - Lowercase letters, numbers, hyphens only
 - Must start and end with alphanumeric
@@ -301,6 +314,7 @@ All `.md` files in `agents/` are auto-discovered.
 ### Namespacing
 
 Agents are namespaced automatically:
+
 - Single plugin: `agent-name`
 - With subdirectories: `plugin:subdir:agent-name`
 
@@ -312,7 +326,7 @@ Create test scenarios to verify agent triggers correctly:
 
 1. Write agent with specific triggering examples
 2. Use similar phrasing to examples in test
-3. Check codex-cli loads the agent
+3. Check codex loads the agent
 4. Verify agent provides expected functionality
 
 ### Test System Prompt
@@ -359,6 +373,7 @@ Output: [What to provide]
 ### Best Practices
 
 **DO:**
+
 - ✅ Include 2-4 concrete examples in description
 - ✅ Write specific triggering conditions
 - ✅ Use `inherit` for model unless specific need
@@ -367,6 +382,7 @@ Output: [What to provide]
 - ✅ Test agent triggering thoroughly
 
 **DON'T:**
+
 - ❌ Use generic descriptions without examples
 - ❌ Omit triggering conditions
 - ❌ Give all agents same color
@@ -382,7 +398,7 @@ For detailed guidance, consult:
 
 - **`references/system-prompt-design.md`** - Complete system prompt patterns
 - **`references/triggering-examples.md`** - Example formats and best practices
-- **`references/agent-creation-system-prompt.md`** - The exact prompt from codex-cli Code
+- **`references/agent-creation-system-prompt.md`** - The exact prompt from codex Code
 
 ### Example Files
 

@@ -168,15 +168,15 @@ if [ "$VERBOSE" = true ]; then
 fi
 
 # Set up environment
-export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-/tmp/test-project}"
-export CLAUDE_PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(pwd)}"
-export CLAUDE_ENV_FILE="${CLAUDE_ENV_FILE:-/tmp/test-env-$$}"
+export CODEX_PROJECT_DIR="${CODEX_PROJECT_DIR:-/tmp/test-project}"
+export CODEX_PLUGIN_ROOT="${CODEX_PLUGIN_ROOT:-$(pwd)}"
+export CODEX_ENV_FILE="${CODEX_ENV_FILE:-/tmp/test-env-$$}"
 
 if [ "$VERBOSE" = true ]; then
   echo "Environment:"
-  echo "  CLAUDE_PROJECT_DIR=$CLAUDE_PROJECT_DIR"
-  echo "  CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT"
-  echo "  CLAUDE_ENV_FILE=$CLAUDE_ENV_FILE"
+  echo "  CODEX_PROJECT_DIR=$CODEX_PROJECT_DIR"
+  echo "  CODEX_PLUGIN_ROOT=$CODEX_PLUGIN_ROOT"
+  echo "  CODEX_ENV_FILE=$CODEX_ENV_FILE"
   echo ""
 fi
 
@@ -233,11 +233,11 @@ else
 fi
 
 # Check for environment file
-if [ -f "$CLAUDE_ENV_FILE" ]; then
+if [ -f "$CODEX_ENV_FILE" ]; then
   echo ""
   echo "Environment file created:"
-  cat "$CLAUDE_ENV_FILE"
-  rm -f "$CLAUDE_ENV_FILE"
+  cat "$CODEX_ENV_FILE"
+  rm -f "$CODEX_ENV_FILE"
 fi
 
 echo ""

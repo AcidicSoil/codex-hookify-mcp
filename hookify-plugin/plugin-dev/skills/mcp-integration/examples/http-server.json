@@ -14,7 +14,7 @@
     "url": "https://api.example.com/mcp",
     "headers": {
       "Authorization": "Bearer ${API_TOKEN}",
-      "X-Service-Name": "codex-cli-plugin"
+      "X-Service-Name": "codex-plugin"
     }
   }
 }

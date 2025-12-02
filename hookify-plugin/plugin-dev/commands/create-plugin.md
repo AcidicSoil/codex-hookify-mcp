@@ -6,7 +6,7 @@ allowed-tools: ["Read", "Write", "Grep", "Glob", "Bash", "TodoWrite", "AskUserQu
 
 # Plugin Creation Workflow
 
-Guide the user through creating a complete, high-quality codex-cli Code plugin from initial concept to tested implementation. Follow a systematic approach: understand requirements, design components, clarify details, implement following best practices, validate, and test.
+Guide the user through creating a complete, high-quality codex Code plugin from initial concept to tested implementation. Follow a systematic approach: understand requirements, design components, clarify details, implement following best practices, validate, and test.
 
 ## Core Principles
 
@@ -26,6 +26,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **Goal**: Understand what plugin needs to be built and what problem it solves
 
 **Actions**:
+
 1. Create todo list with all 7 phases
 2. If plugin purpose is clear from arguments:
    - Summarize understanding
@@ -48,6 +49,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **MUST load plugin-structure skill** using Skill tool before this phase.
 
 **Actions**:
+
 1. Load plugin-structure skill to understand component types
 2. Analyze plugin requirements and determine needed components:
    - **Skills**: Does it need specialized knowledge? (hooks API, MCP patterns, etc.)
@@ -61,6 +63,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
    - What each one does
    - Rough triggering/usage patterns
 4. Present component plan to user as table:
+
    ```
    | Component Type | Count | Purpose |
    |----------------|-------|---------|
@@ -70,6 +73,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
    | Hooks          | 0     | Not needed |
    | MCP            | 1     | Database integration |
    ```
+
 5. Get user confirmation or adjustments
 
 **Output**: Confirmed list of components to create
@@ -83,6 +87,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **CRITICAL**: This is one of the most important phases. DO NOT SKIP.
 
 **Actions**:
+
 1. For each component in the plan, identify underspecified aspects:
    - **Skills**: What triggers them? What knowledge do they provide? How detailed?
    - **Commands**: What arguments? What tools? Interactive or automated?
@@ -98,12 +103,14 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 4. If user says "whatever you think is best", provide specific recommendations and get explicit confirmation
 
 **Example questions for a skill**:
+
 - What specific user queries should trigger this skill?
 - Should it include utility scripts? What functionality?
 - How detailed should the core SKILL.md be vs references/?
 - Any real-world examples to include?
 
 **Example questions for an agent**:
+
 - Should this agent trigger proactively after certain actions, or only when explicitly requested?
 - What tools does it need (Read, Write, Bash, etc.)?
 - What should the output format be?
@@ -118,19 +125,23 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **Goal**: Create plugin directory structure and manifest
 
 **Actions**:
+
 1. Determine plugin name (kebab-case, descriptive)
 2. Choose plugin location:
    - Ask user: "Where should I create the plugin?"
    - Offer options: current directory, ../new-plugin-name, custom path
 3. Create directory structure using bash:
+
    ```bash
-   mkdir -p plugin-name/.codex-cli-plugin
+   mkdir -p plugin-name/.codex-plugin
    mkdir -p plugin-name/skills     # if needed
    mkdir -p plugin-name/commands   # if needed
    mkdir -p plugin-name/agents     # if needed
    mkdir -p plugin-name/hooks      # if needed
    ```
+
 4. Create plugin.json manifest using Write tool:
+
    ```json
    {
      "name": "plugin-name",
@@ -142,8 +153,9 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
      }
    }
    ```
+
 5. Create README.md template
-6. Create .gitignore if needed (for .codex-cli/*.local.md, etc.)
+6. Create .gitignore if needed (for .codex/*.local.md, etc.)
 7. Initialize git repo if creating new directory
 
 **Output**: Plugin directory structure created and ready for components
@@ -155,6 +167,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **Goal**: Create each component following best practices
 
 **LOAD RELEVANT SKILLS** before implementing each component type:
+
 - Skills: Load skill-development skill
 - Commands: Load command-development skill
 - Agents: Load agent-development skill
@@ -164,7 +177,8 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 
 **Actions for each component**:
 
-### For Skills:
+### For Skills
+
 1. Load skill-development skill using Skill tool
 2. For each skill:
    - Ask user for concrete usage examples (or use from Phase 3)
@@ -179,17 +193,19 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
    - Create utility scripts if needed
 3. Use skill-reviewer agent to validate each skill
 
-### For Commands:
+### For Commands
+
 1. Load command-development skill using Skill tool
 2. For each command:
    - Write command markdown with frontmatter
    - Include clear description and argument-hint
    - Specify allowed-tools (minimal necessary)
-   - Write instructions FOR codex-cli (not TO user)
+   - Write instructions FOR codex (not TO user)
    - Provide usage examples and tips
    - Reference relevant skills if applicable
 
-### For Agents:
+### For Agents
+
 1. Load agent-development skill using Skill tool
 2. For each agent, use agent-creator agent:
    - Provide description of what agent should do
@@ -198,31 +214,34 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
    - Add appropriate model, color, and tools
    - Validate with validate-agent.sh script
 
-### For Hooks:
+### For Hooks
+
 1. Load hook-development skill using Skill tool
 2. For each hook:
    - Create hooks/hooks.json with hook configuration
    - Prefer prompt-based hooks for complex logic
-   - Use ${CLAUDE_PLUGIN_ROOT} for portability
+   - Use ${CODEX_PLUGIN_ROOT} for portability
    - Create hook scripts if needed (in examples/ not scripts/)
    - Test with validate-hook-schema.sh and test-hook.sh utilities
 
-### For MCP:
+### For MCP
+
 1. Load mcp-integration skill using Skill tool
 2. Create .mcp.json configuration with:
    - Server type (stdio for local, SSE for hosted)
-   - Command and args (with ${CLAUDE_PLUGIN_ROOT})
+   - Command and args (with ${CODEX_PLUGIN_ROOT})
    - extensionToLanguage mapping if LSP
    - Environment variables as needed
 3. Document required env vars in README
 4. Provide setup instructions
 
-### For Settings:
+### For Settings
+
 1. Load plugin-settings skill using Skill tool
 2. Create settings template in README
-3. Create example .codex-cli/plugin-name.local.md file (as documentation)
+3. Create example .codex/plugin-name.local.md file (as documentation)
 4. Implement settings reading in hooks/commands as needed
-5. Add to .gitignore: `.codex-cli/*.local.md`
+5. Add to .gitignore: `.codex/*.local.md`
 
 **Progress tracking**: Update todos as each component is completed
 
@@ -235,6 +254,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **Goal**: Ensure plugin meets quality standards and works correctly
 
 **Actions**:
+
 1. **Run plugin-validator agent**:
    - Use plugin-validator agent to comprehensively validate plugin
    - Check: manifest, structure, naming, components, security
@@ -257,7 +277,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 5. **Test hook configuration** (if plugin has hooks):
    - Run validate-hook-schema.sh on hooks/hooks.json
    - Test hook scripts with test-hook.sh
-   - Verify ${CLAUDE_PLUGIN_ROOT} usage
+   - Verify ${CODEX_PLUGIN_ROOT} usage
 
 6. **Present findings**:
    - Summary of validation results
@@ -272,15 +292,18 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 
 ## Phase 7: Testing & Verification
 
-**Goal**: Test that plugin works correctly in codex-cli Code
+**Goal**: Test that plugin works correctly in codex Code
 
 **Actions**:
+
 1. **Installation instructions**:
    - Show user how to test locally:
+
      ```bash
      cc --plugin-dir /path/to/plugin-name
      ```
-   - Or copy to `.codex-cli-plugin/` for project testing
+
+   - Or copy to `.codex-plugin/` for project testing
 
 2. **Verification checklist** for user to perform:
    - [ ] Skills load when triggered (ask questions with trigger phrases)
@@ -294,7 +317,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
    - For skills: Ask questions using trigger phrases from descriptions
    - For commands: Run `/plugin-name:command-name` with various arguments
    - For agents: Create scenarios matching agent examples
-   - For hooks: Use `codex-cli --debug` to see hook execution
+   - For hooks: Use `codex --debug` to see hook execution
    - For MCP: Use `/mcp` to verify servers and tools
 
 4. **Ask user**: "I've prepared the plugin for testing. Would you like me to guide you through testing each component, or do you want to test it yourself?"
@@ -310,6 +333,7 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 **Goal**: Ensure plugin is well-documented and ready for distribution
 
 **Actions**:
+
 1. **Verify README completeness**:
    - Check README has: overview, features, installation, prerequisites, usage
    - For MCP plugins: Document required environment variables
@@ -354,9 +378,9 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 - **Apply best practices**:
   - Third-person descriptions for skills
   - Imperative form in skill bodies
-  - Commands written FOR codex-cli
+  - Commands written FOR codex
   - Strong trigger phrases
-  - ${CLAUDE_PLUGIN_ROOT} for portability
+  - ${CODEX_PLUGIN_ROOT} for portability
   - Progressive disclosure
   - Security-first (HTTPS, no hardcoded credentials)
 
@@ -377,32 +401,37 @@ Guide the user through creating a complete, high-quality codex-cli Code plugin f
 ### Quality Standards
 
 Every component must meet these standards:
+
 - ✅ Follows plugin-dev's proven patterns
 - ✅ Uses correct naming conventions
 - ✅ Has strong trigger conditions (skills/agents)
 - ✅ Includes working examples
 - ✅ Properly documented
 - ✅ Validated with utilities
-- ✅ Tested in codex-cli Code
+- ✅ Tested in codex Code
 
 ---
 
 ## Example Workflow
 
 ### User Request
+
 "Create a plugin for managing database migrations"
 
 ### Phase 1: Discovery
+
 - Understand: Migration management, database schema versioning
 - Confirm: User wants to create, run, rollback migrations
 
 ### Phase 2: Component Planning
+
 - Skills: 1 (migration best practices)
 - Commands: 3 (create-migration, run-migrations, rollback)
 - Agents: 1 (migration-validator)
 - MCP: 1 (database connection)
 
 ### Phase 3: Clarifying Questions
+
 - Which databases? (PostgreSQL, MySQL, etc.)
 - Migration file format? (SQL, code-based?)
 - Should agent validate before applying?

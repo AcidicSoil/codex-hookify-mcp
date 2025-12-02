@@ -1,6 +1,6 @@
 # Common Hook Patterns
 
-This reference provides common, proven patterns for implementing codex-cli Code hooks. Use these patterns as starting points for typical hook use cases.
+This reference provides common, proven patterns for implementing codex Code hooks. Use these patterns as starting points for typical hook use cases.
 
 ## Pattern 1: Security Validation
 
@@ -58,7 +58,7 @@ Load project-specific context at session start:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/load-context.sh"
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/load-context.sh"
         }
       ]
     }
@@ -67,17 +67,18 @@ Load project-specific context at session start:
 ```
 
 **Example script (load-context.sh):**
+
 ```bash
 #!/bin/bash
-cd "$CLAUDE_PROJECT_DIR" || exit 1
+cd "$CODEX_PROJECT_DIR" || exit 1
 
 # Detect project type
 if [ -f "package.json" ]; then
   echo "📦 Node.js project detected"
-  echo "export PROJECT_TYPE=nodejs" >> "$CLAUDE_ENV_FILE"
+  echo "export PROJECT_TYPE=nodejs" >> "$CODEX_ENV_FILE"
 elif [ -f "Cargo.toml" ]; then
   echo "🦀 Rust project detected"
-  echo "export PROJECT_TYPE=rust" >> "$CLAUDE_ENV_FILE"
+  echo "export PROJECT_TYPE=rust" >> "$CODEX_ENV_FILE"
 fi
 ```
 
@@ -95,7 +96,7 @@ Log all notifications for audit or analysis:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/log-notification.sh"
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/log-notification.sh"
         }
       ]
     }
@@ -183,7 +184,7 @@ Run linters or formatters on file edits:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-quality.sh"
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/check-quality.sh"
         }
       ]
     }
@@ -192,6 +193,7 @@ Run linters or formatters on file edits:
 ```
 
 **Example script (check-quality.sh):**
+
 ```bash
 #!/bin/bash
 input=$(cat)
@@ -248,7 +250,7 @@ Combine multiple patterns for comprehensive protection:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/load-context.sh"
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/load-context.sh"
         }
       ]
     }
@@ -265,7 +267,7 @@ Create hooks that only run when explicitly enabled via flag files:
 ```bash
 #!/bin/bash
 # Hook only active when flag file exists
-FLAG_FILE="$CLAUDE_PROJECT_DIR/.enable-security-scan"
+FLAG_FILE="$CODEX_PROJECT_DIR/.enable-security-scan"
 
 if [ ! -f "$FLAG_FILE" ]; then
   # Quick exit when disabled
@@ -281,6 +283,7 @@ security-scanner "$file_path"
 ```
 
 **Activation:**
+
 ```bash
 # Enable the hook
 touch .enable-security-scan
@@ -290,12 +293,13 @@ rm .enable-security-scan
 ```
 
 **Use for:**
+
 - Temporary debugging hooks
 - Feature flags for development
 - Project-specific validation that's opt-in
 - Performance-intensive checks only when needed
 
-**Note:** Must restart codex-cli Code after creating/removing flag files for hooks to recognize changes.
+**Note:** Must restart codex Code after creating/removing flag files for hooks to recognize changes.
 
 ## Pattern 10: Configuration-Driven Hooks
 
@@ -303,7 +307,7 @@ Use JSON configuration to control hook behavior:
 
 ```bash
 #!/bin/bash
-CONFIG_FILE="$CLAUDE_PROJECT_DIR/.codex-cli/my-plugin.local.json"
+CONFIG_FILE="$CODEX_PROJECT_DIR/.codex/my-plugin.local.json"
 
 # Read configuration
 if [ -f "$CONFIG_FILE" ]; then
@@ -330,7 +334,8 @@ if [ "$file_size" -gt "$max_file_size" ]; then
 fi
 ```
 
-**Configuration file (.codex-cli/my-plugin.local.json):**
+**Configuration file (.codex/my-plugin.local.json):**
+
 ```json
 {
   "strictMode": true,
@@ -340,6 +345,7 @@ fi
 ```
 
 **Use for:**
+
 - User-configurable hook behavior
 - Per-project settings
 - Team-specific rules

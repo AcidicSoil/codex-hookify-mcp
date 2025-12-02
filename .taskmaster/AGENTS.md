@@ -46,13 +46,14 @@ task-master generate                                         # Update task markd
 - `.env` - API keys for CLI usage
 
 **PRD File Format:** While both `.txt` and `.md` extensions work, **`.md` is recommended** because:
+
 - Markdown syntax highlighting in editors improves readability
 - Proper rendering when previewing in VS Code, GitHub, or other tools
 - Better collaboration through formatted documentation
 
 ### Claude Code Integration Files
 
-- `CLAUDE.md` - Auto-loaded context for Claude Code (this file)
+- `CODEX.md` - Auto-loaded context for Claude Code (this file)
 - `.claude/settings.json` - Claude Code tool allowlist and preferences
 - `.claude/commands/` - Custom slash commands for repeated workflows
 - `.mcp.json` - MCP server configuration (project-specific)
@@ -78,7 +79,7 @@ project/
 │   └── commands/         # Custom slash commands
 ├── .env                  # API keys
 ├── .mcp.json            # MCP configuration
-└── CLAUDE.md            # This file - auto-loaded by Claude Code
+└── CODEX.md            # This file - auto-loaded by Claude Code
 ```
 
 ## MCP Integration
@@ -294,7 +295,7 @@ task-master models --set-fallback gpt-4o-mini
 ### Context Management
 
 - Use `/clear` between different tasks to maintain focus
-- This CLAUDE.md file is automatically loaded for context
+- This CODEX.md file is automatically loaded for context
 - Use `task-master show <id>` to pull specific task context when needed
 
 ### Iterative Implementation

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """PostToolUse hook executor for hookify plugin.
 
-This script is called by codex-cli Code after a tool executes.
-It reads .codex-cli/hookify.*.local.md files and evaluates rules.
+This script is called by codex after a tool executes.
+It reads .codex/hookify.*.local.md files and evaluates rules.
 """
 
+import json
 import os
 import sys
-import json
 
 # CRITICAL: Add plugin root to Python path for imports
-PLUGIN_ROOT = os.environ.get('CLAUDE_PLUGIN_ROOT')
+PLUGIN_ROOT = os.environ.get('CODEX_PLUGIN_ROOT')
 if PLUGIN_ROOT:
     parent_dir = os.path.dirname(PLUGIN_ROOT)
     if parent_dir not in sys.path:

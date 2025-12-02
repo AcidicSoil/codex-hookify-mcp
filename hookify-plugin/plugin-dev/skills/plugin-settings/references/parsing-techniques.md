@@ -1,6 +1,6 @@
 # Settings File Parsing Techniques
 
-Complete guide to parsing `.codex-cli/plugin-name.local.md` files in bash scripts.
+Complete guide to parsing `.codex/plugin-name.local.md` files in bash scripts.
 
 ## File Structure
 
@@ -27,13 +27,14 @@ It's useful for prompts, documentation, or additional context.
 
 ```bash
 #!/bin/bash
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 
 # Extract everything between --- markers (excluding the markers themselves)
 FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$FILE")
 ```
 
 **How it works:**
+
 - `sed -n` - Suppress automatic printing
 - `/^---$/,/^---$/` - Range from first `---` to second `---`
 - `{ /^---$/d; p; }` - Delete the `---` lines, print everything else
@@ -41,6 +42,7 @@ FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$FILE")
 ### Extract Individual Fields
 
 **String fields:**
+
 ```bash
 # Simple value
 VALUE=$(echo "$FRONTMATTER" | grep '^field_name:' | sed 's/field_name: *//')
@@ -50,6 +52,7 @@ VALUE=$(echo "$FRONTMATTER" | grep '^field_name:' | sed 's/field_name: *//' | se
 ```
 
 **Boolean fields:**
+
 ```bash
 ENABLED=$(echo "$FRONTMATTER" | grep '^enabled:' | sed 's/enabled: *//')
 
@@ -60,6 +63,7 @@ fi
 ```
 
 **Numeric fields:**
+
 ```bash
 MAX=$(echo "$FRONTMATTER" | grep '^max_value:' | sed 's/max_value: *//')
 
@@ -73,6 +77,7 @@ fi
 ```
 
 **List fields (simple):**
+
 ```bash
 # YAML: list: ["item1", "item2", "item3"]
 LIST=$(echo "$FRONTMATTER" | grep '^list:' | sed 's/list: *//')
@@ -85,6 +90,7 @@ fi
 ```
 
 **List fields (proper parsing with jq):**
+
 ```bash
 # For proper list handling, use yq or convert to JSON
 # This requires yq to be installed (brew install yq)
@@ -104,7 +110,7 @@ done
 
 ```bash
 #!/bin/bash
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 
 # Extract everything after the closing ---
 # Counts --- markers: first is opening, second is closing, everything after is body
@@ -112,6 +118,7 @@ BODY=$(awk '/^---$/{i++; next} i>=2' "$FILE")
 ```
 
 **How it works:**
+
 - `/^---$/` - Match `---` lines
 - `{i++; next}` - Increment counter and skip the `---` line
 - `i>=2` - Print all lines after second `---`
@@ -124,7 +131,7 @@ BODY=$(awk '/^---$/{i++; next} i>=2' "$FILE")
 # Extract body
 PROMPT=$(awk '/^---$/{i++; next} i>=2' "$RALPH_STATE_FILE")
 
-# Feed back to codex-cli
+# Feed back to codex
 echo '{"decision": "block", "reason": "'"$PROMPT"'"}' | jq .
 ```
 
@@ -195,7 +202,7 @@ Always use temp file + atomic move to prevent corruption:
 
 ```bash
 #!/bin/bash
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 NEW_VALUE="updated_value"
 
 # Create temp file
@@ -240,7 +247,7 @@ mv "$TEMP_FILE" "$FILE"
 ### Validate File Exists and Is Readable
 
 ```bash
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 
 if [[ ! -f "$FILE" ]]; then
   echo "Settings file not found" >&2
@@ -311,6 +318,7 @@ field3: 'value'
 ```
 
 **Handle both:**
+
 ```bash
 # Remove surrounding quotes if present
 VALUE=$(echo "$FRONTMATTER" | grep '^field:' | sed 's/field: *//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\\(.*\\)'$/\\1/")
@@ -346,6 +354,7 @@ field3: null
 ```
 
 **Parsing:**
+
 ```bash
 VALUE=$(echo "$FRONTMATTER" | grep '^field1:' | sed 's/field1: *//')
 # VALUE will be empty string
@@ -367,6 +376,7 @@ regex: "^[a-zA-Z0-9_]+$"
 ```
 
 **Safe parsing:**
+
 ```bash
 # Always quote variables when using
 MESSAGE=$(echo "$FRONTMATTER" | grep '^message:' | sed 's/message: *//' | sed 's/^"\(.*\)"$/\1/')
@@ -407,7 +417,7 @@ if [[ "$tool_name" != "Write" ]]; then
 fi
 
 # Only now check settings file
-if [[ -f ".codex-cli/my-plugin.local.md" ]]; then
+if [[ -f ".codex/my-plugin.local.md" ]]; then
   # Parse settings
   # ...
 fi
@@ -421,7 +431,7 @@ fi
 #!/bin/bash
 set -x  # Enable debug tracing
 
-FILE=".codex-cli/my-plugin.local.md"
+FILE=".codex/my-plugin.local.md"
 
 if [[ -f "$FILE" ]]; then
   echo "Settings file found" >&2
@@ -472,11 +482,13 @@ done
 ```
 
 **Pros:**
+
 - Proper YAML parsing
 - Handles complex structures
 - Better list/object support
 
 **Cons:**
+
 - Requires yq installation
 - Additional dependency
 - May not be available on all systems
@@ -490,7 +502,7 @@ done
 set -euo pipefail
 
 # Configuration
-SETTINGS_FILE=".codex-cli/my-plugin.local.md"
+SETTINGS_FILE=".codex/my-plugin.local.md"
 
 # Quick exit if not configured
 if [[ ! -f "$SETTINGS_FILE" ]]; then

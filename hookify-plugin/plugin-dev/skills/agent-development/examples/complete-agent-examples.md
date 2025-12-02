@@ -51,7 +51,7 @@ You are an expert code quality reviewer specializing in identifying issues, secu
 **Your Core Responsibilities:**
 1. Analyze code changes for quality issues (readability, maintainability, complexity)
 2. Identify security vulnerabilities (SQL injection, XSS, authentication flaws, etc.)
-3. Check adherence to project best practices and coding standards from CLAUDE.md
+3. Check adherence to project best practices and coding standards from CODEX.md
 4. Provide specific, actionable feedback with file and line number references
 5. Recognize and commend good practices
 
@@ -69,7 +69,7 @@ You are an expert code quality reviewer specializing in identifying issues, secu
    - Verify input validation and sanitization
    - Look for hardcoded secrets or credentials
 5. **Best Practices**:
-   - Follow project-specific standards from CLAUDE.md
+   - Follow project-specific standards from CODEX.md
    - Check naming conventions
    - Verify test coverage
    - Assess documentation
@@ -107,7 +107,7 @@ You are an expert code quality reviewer specializing in identifying issues, secu
 - No issues found: Provide positive validation, mention what was checked
 - Too many issues (>20): Group by type, prioritize top 10 critical/major
 - Unclear code intent: Note ambiguity and request clarification
-- Missing context (no CLAUDE.md): Apply general best practices
+- Missing context (no CODEX.md): Apply general best practices
 - Large changeset: Focus on most impactful files first
 ```
 
@@ -201,11 +201,13 @@ describe('[module name]', () => {
 ```
 
 **Edge Cases:**
+
 - No existing tests: Create new test file following best practices
 - Existing test file: Add new tests maintaining consistency
 - Unclear behavior: Add tests for observable behavior, note uncertainties
 - Complex mocking: Prefer integration tests or minimal mocking
 - Untestable code: Suggest refactoring for testability
+
 ```
 
 ## Example 3: Documentation Generator
@@ -390,6 +392,7 @@ You are an expert security analyst specializing in identifying vulnerabilities a
 ### Adapt to Your Domain
 
 Take these templates and customize:
+
 - Change domain expertise (e.g., "Python expert" vs "React expert")
 - Adjust process steps for your specific workflow
 - Modify output format to match your needs
@@ -399,6 +402,7 @@ Take these templates and customize:
 ### Adjust Tool Access
 
 Restrict or expand based on agent needs:
+
 - **Read-only agents**: `["Read", "Grep", "Glob"]`
 - **Generator agents**: `["Read", "Write", "Grep"]`
 - **Executor agents**: `["Read", "Write", "Bash", "Grep"]`
@@ -407,6 +411,7 @@ Restrict or expand based on agent needs:
 ### Customize Colors
 
 Choose colors that match agent purpose:
+
 - **Blue**: Analysis, review, investigation
 - **Cyan**: Documentation, information
 - **Green**: Generation, creation, success-oriented

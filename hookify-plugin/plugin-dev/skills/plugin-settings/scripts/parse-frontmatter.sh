@@ -10,13 +10,13 @@ show_usage() {
   echo ""
   echo "Examples:"
   echo "  # Show all frontmatter"
-  echo "  $0 .codex-cli/my-plugin.local.md"
+  echo "  $0 .codex/my-plugin.local.md"
   echo ""
   echo "  # Extract specific field"
-  echo "  $0 .codex-cli/my-plugin.local.md enabled"
+  echo "  $0 .codex/my-plugin.local.md enabled"
   echo ""
   echo "  # Extract and use in script"
-  echo "  ENABLED=\$($0 .codex-cli/my-plugin.local.md enabled)"
+  echo "  ENABLED=\$($0 .codex/my-plugin.local.md enabled)"
   exit 0
 }
 

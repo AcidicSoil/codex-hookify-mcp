@@ -8,12 +8,12 @@ WARNING: Do not install this plugin unless you are fine with incurring the token
 
 ## What it does
 
-When enabled, this plugin automatically adds instructions at the start of each session that encourage codex-cli to:
+When enabled, this plugin automatically adds instructions at the start of each session that encourage codex to:
 
 1. **Learning Mode:** Engage you in active learning by requesting meaningful code contributions at decision points
 2. **Explanatory Mode:** Provide educational insights about implementation choices and codebase patterns
 
-Instead of implementing everything automatically, codex-cli will:
+Instead of implementing everything automatically, codex will:
 
 1. Identify opportunities where you can write 5-10 lines of meaningful code
 2. Focus on business logic and design choices where your input truly matters
@@ -23,11 +23,12 @@ Instead of implementing everything automatically, codex-cli will:
 
 ## How it works
 
-The plugin uses a SessionStart hook to inject additional context into every session. This context instructs codex-cli to adopt an interactive teaching approach where you actively participate in writing key parts of the code.
+The plugin uses a SessionStart hook to inject additional context into every session. This context instructs codex to adopt an interactive teaching approach where you actively participate in writing key parts of the code.
 
-## When codex-cli requests contributions
+## When codex requests contributions
 
-codex-cli will ask you to write code for:
+codex will ask you to write code for:
+
 - Business logic with multiple valid approaches
 - Error handling strategies
 - Algorithm implementation choices
@@ -35,9 +36,10 @@ codex-cli will ask you to write code for:
 - User experience decisions
 - Design patterns and architecture choices
 
-## When codex-cli won't request contributions
+## When codex won't request contributions
 
-codex-cli will implement directly:
+codex will implement directly:
+
 - Boilerplate or repetitive code
 - Obvious implementations with no meaningful choices
 - Configuration or setup code
@@ -45,7 +47,7 @@ codex-cli will implement directly:
 
 ## Example interaction
 
-**codex-cli:** I've set up the authentication middleware. The session timeout behavior is a security vs. UX trade-off - should sessions auto-extend on activity, or have a hard timeout?
+**codex:** I've set up the authentication middleware. The session timeout behavior is a security vs. UX trade-off - should sessions auto-extend on activity, or have a hard timeout?
 
 In `auth/middleware.ts`, implement the `handleSessionTimeout()` function to define the timeout behavior.
 
@@ -55,7 +57,7 @@ Consider: auto-extending improves UX but may leave sessions open longer; hard ti
 
 ## Educational insights
 
-In addition to interactive learning, codex-cli will provide educational insights about implementation choices using this format:
+In addition to interactive learning, codex will provide educational insights about implementation choices using this format:
 
 ```
 `★ Insight ─────────────────────────────────────`
@@ -64,6 +66,7 @@ In addition to interactive learning, codex-cli will provide educational insights
 ```
 
 These insights focus on:
+
 - Specific implementation choices for your codebase
 - Patterns and conventions in your code
 - Trade-offs and design decisions
@@ -79,15 +82,15 @@ This plugin combines the unshipped "Learning" output style with the deprecated "
 
 If you previously used the explanatory-output-style plugin, this learning plugin includes all of that functionality plus interactive learning features.
 
-This SessionStart hook pattern is roughly equivalent to CLAUDE.md, but it is more flexible and allows for distribution through plugins.
+This SessionStart hook pattern is roughly equivalent to CODEX.md, but it is more flexible and allows for distribution through plugins.
 
 ## Managing changes
 
 - Disable the plugin - keep the code installed on your device
 - Uninstall the plugin - remove the code from your device
 - Update the plugin - create a local copy of this plugin to personalize it
-  - Hint: Ask codex-cli to read https://docs.claude.com/en/docs/claude-code/plugins.md and set it up for you!
+  - Hint: Ask codex to read <https://docs.claude.com/en/docs/claude-code/plugins.md> and set it up for you!
 
 ## Philosophy
 
-Learning by doing is more effective than passive observation. This plugin transforms your interaction with codex-cli from "watch and learn" to "build and understand," ensuring you develop practical skills through hands-on coding of meaningful logic.
+Learning by doing is more effective than passive observation. This plugin transforms your interaction with codex from "watch and learn" to "build and understand," ensuring you develop practical skills through hands-on coding of meaningful logic.

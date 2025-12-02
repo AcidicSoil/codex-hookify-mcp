@@ -1,6 +1,6 @@
 # Plugin Command Examples
 
-Practical examples of commands designed for codex-cli Code plugins, demonstrating plugin-specific patterns and features.
+Practical examples of commands designed for codex Code plugins, demonstrating plugin-specific patterns and features.
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ allowed-tools: Bash(node:*), Read
 
 Analyze @$1 using plugin's quality checker:
 
-!`node ${CLAUDE_PLUGIN_ROOT}/scripts/quality-check.js $1`
+!`node ${CODEX_PLUGIN_ROOT}/scripts/quality-check.js $1`
 
 Review the analysis output and provide:
 1. Summary of findings
@@ -42,7 +42,8 @@ Review the analysis output and provide:
 ```
 
 **Key features:**
-- Uses `${CLAUDE_PLUGIN_ROOT}` for portable path
+
+- Uses `${CODEX_PLUGIN_ROOT}` for portable path
 - Combines file reference with script execution
 - Simple single-purpose command
 
@@ -65,13 +66,13 @@ model: sonnet
 Running complete audit on $1:
 
 **Security scan:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/security-scan.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/security-scan.sh $1`
 
 **Performance analysis:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/perf-analyze.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/perf-analyze.sh $1`
 
 **Best practices check:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/best-practices.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/best-practices.sh $1`
 
 Analyze all results and create comprehensive report including:
 - Critical issues requiring immediate attention
@@ -81,6 +82,7 @@ Analyze all results and create comprehensive report including:
 ```
 
 **Key features:**
+
 - Multiple script executions
 - Organized output sections
 - Comprehensive workflow
@@ -100,7 +102,7 @@ description: Generate API documentation from template
 argument-hint: [api-file]
 ---
 
-Template structure: @${CLAUDE_PLUGIN_ROOT}/templates/api-documentation.md
+Template structure: @${CODEX_PLUGIN_ROOT}/templates/api-documentation.md
 
 API implementation: @$1
 
@@ -118,6 +120,7 @@ Format output as markdown suitable for README or docs site.
 ```
 
 **Key features:**
+
 - Uses plugin template
 - Combines template with source file
 - Standardized output format
@@ -141,16 +144,16 @@ allowed-tools: Bash(*), Read
 Executing release workflow for version $1:
 
 **Step 1 - Pre-release validation:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/pre-release-check.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/pre-release-check.sh $1`
 
 **Step 2 - Build artifacts:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build-release.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/build-release.sh $1`
 
 **Step 3 - Run test suite:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/run-tests.sh`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/run-tests.sh`
 
 **Step 4 - Package release:**
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/package.sh $1`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/package.sh $1`
 
 Review all step outputs and report:
 1. Any failures or warnings
@@ -161,6 +164,7 @@ Review all step outputs and report:
 ```
 
 **Key features:**
+
 - Multi-step workflow
 - Sequential script execution
 - Clear step numbering
@@ -181,7 +185,7 @@ argument-hint: [environment]
 allowed-tools: Read, Bash(*)
 ---
 
-Deployment configuration for $1: @${CLAUDE_PLUGIN_ROOT}/config/$1-deploy.json
+Deployment configuration for $1: @${CODEX_PLUGIN_ROOT}/config/$1-deploy.json
 
 Current git state: !`git rev-parse --short HEAD`
 
@@ -202,6 +206,7 @@ Report deployment status and any issues encountered.
 ```
 
 **Key features:**
+
 - Environment-specific configuration
 - Dynamic config file loading
 - Pre-deployment validation
@@ -231,14 +236,15 @@ The agent will perform:
 5. **Documentation check** - Verify adequate documentation
 
 The agent has access to:
-- Plugin's linting rules: ${CLAUDE_PLUGIN_ROOT}/config/lint-rules.json
-- Security checklist: ${CLAUDE_PLUGIN_ROOT}/checklists/security.md
-- Performance guidelines: ${CLAUDE_PLUGIN_ROOT}/docs/performance.md
+- Plugin's linting rules: ${CODEX_PLUGIN_ROOT}/config/lint-rules.json
+- Security checklist: ${CODEX_PLUGIN_ROOT}/checklists/security.md
+- Performance guidelines: ${CODEX_PLUGIN_ROOT}/docs/performance.md
 
 Note: This uses the Task tool to launch the plugin's code-reviewer agent for thorough analysis.
 ```
 
 **Key features:**
+
 - Delegates to plugin agent
 - Documents agent capabilities
 - References plugin resources
@@ -279,6 +285,7 @@ Generate production-ready API documentation.
 ```
 
 **Key features:**
+
 - Invokes plugin skill by name
 - Documents skill purpose
 - Clear expectations
@@ -304,7 +311,7 @@ Target file: @$1
 Execute comprehensive review workflow:
 
 **Phase 1: Automated Analysis**
-Run plugin analyzer: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js $1`
+Run plugin analyzer: !`node ${CODEX_PLUGIN_ROOT}/scripts/analyze.js $1`
 
 **Phase 2: Deep Review (Agent)**
 Launch the code-quality-reviewer agent for detailed analysis.
@@ -322,7 +329,7 @@ Use the coding-standards skill to validate:
 - Framework-specific patterns
 
 **Phase 4: Report Generation**
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/review-report.md
+Template: @${CODEX_PLUGIN_ROOT}/templates/review-report.md
 
 Compile all findings into comprehensive report following template.
 
@@ -336,6 +343,7 @@ Include specific file locations and suggested changes for each item.
 ```
 
 **Key features:**
+
 - Multi-phase workflow
 - Combines scripts, agents, skills
 - Template-based reporting
@@ -358,17 +366,17 @@ allowed-tools: Bash(*)
 
 Validate environment argument: !`echo "$1" | grep -E "^(dev|staging|prod)$" && echo "VALID" || echo "INVALID"`
 
-Check build script exists: !`test -x ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh && echo "EXISTS" || echo "MISSING"`
+Check build script exists: !`test -x ${CODEX_PLUGIN_ROOT}/scripts/build.sh && echo "EXISTS" || echo "MISSING"`
 
-Verify configuration available: !`test -f ${CLAUDE_PLUGIN_ROOT}/config/$1.json && echo "FOUND" || echo "NOT_FOUND"`
+Verify configuration available: !`test -f ${CODEX_PLUGIN_ROOT}/config/$1.json && echo "FOUND" || echo "NOT_FOUND"`
 
 If all validations pass:
 
-**Configuration:** @${CLAUDE_PLUGIN_ROOT}/config/$1.json
+**Configuration:** @${CODEX_PLUGIN_ROOT}/config/$1.json
 
-**Execute build:** !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh $1 2>&1`
+**Execute build:** !`bash ${CODEX_PLUGIN_ROOT}/scripts/build.sh $1 2>&1`
 
-**Validation results:** !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-build.sh $1 2>&1`
+**Validation results:** !`bash ${CODEX_PLUGIN_ROOT}/scripts/validate-build.sh $1 2>&1`
 
 Report build status and any issues.
 
@@ -380,6 +388,7 @@ If validations fail:
 ```
 
 **Key features:**
+
 - Input validation
 - Resource existence checks
 - Error handling
@@ -403,19 +412,19 @@ allowed-tools: Bash(*), Read
 
 Environment: $1
 
-Load environment configuration: @${CLAUDE_PLUGIN_ROOT}/config/$1-checks.json
+Load environment configuration: @${CODEX_PLUGIN_ROOT}/config/$1-checks.json
 
 Determine check level: !`echo "$1" | grep -E "^prod$" && echo "FULL" || echo "BASIC"`
 
 **For production environment:**
-- Full test suite: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test-full.sh`
-- Security scan: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/security-scan.sh`
-- Performance audit: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/perf-check.sh`
-- Compliance check: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/compliance.sh`
+- Full test suite: !`bash ${CODEX_PLUGIN_ROOT}/scripts/test-full.sh`
+- Security scan: !`bash ${CODEX_PLUGIN_ROOT}/scripts/security-scan.sh`
+- Performance audit: !`bash ${CODEX_PLUGIN_ROOT}/scripts/perf-check.sh`
+- Compliance check: !`bash ${CODEX_PLUGIN_ROOT}/scripts/compliance.sh`
 
 **For non-production environments:**
-- Basic tests: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test-basic.sh`
-- Quick lint: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/lint.sh`
+- Basic tests: !`bash ${CODEX_PLUGIN_ROOT}/scripts/test-basic.sh`
+- Quick lint: !`bash ${CODEX_PLUGIN_ROOT}/scripts/lint.sh`
 
 Analyze results based on environment requirements:
 
@@ -427,6 +436,7 @@ Report status and recommend proceed/block decision.
 ```
 
 **Key features:**
+
 - Environment-aware logic
 - Conditional execution
 - Different validation levels
@@ -437,45 +447,59 @@ Report status and recommend proceed/block decision.
 ## Common Patterns Summary
 
 ### Pattern: Plugin Script Execution
+
 ```markdown
-!`node ${CLAUDE_PLUGIN_ROOT}/scripts/script-name.js $1`
+!`node ${CODEX_PLUGIN_ROOT}/scripts/script-name.js $1`
 ```
+
 Use for: Running plugin-provided Node.js scripts
 
 ### Pattern: Plugin Configuration Loading
+
 ```markdown
-@${CLAUDE_PLUGIN_ROOT}/config/config-name.json
+@${CODEX_PLUGIN_ROOT}/config/config-name.json
 ```
+
 Use for: Loading plugin configuration files
 
 ### Pattern: Plugin Template Usage
+
 ```markdown
-@${CLAUDE_PLUGIN_ROOT}/templates/template-name.md
+@${CODEX_PLUGIN_ROOT}/templates/template-name.md
 ```
+
 Use for: Using plugin templates for generation
 
 ### Pattern: Agent Invocation
+
 ```markdown
 Launch the [agent-name] agent for [task description].
 ```
+
 Use for: Delegating complex tasks to plugin agents
 
 ### Pattern: Skill Reference
+
 ```markdown
 Use the [skill-name] skill to ensure [requirements].
 ```
+
 Use for: Leveraging plugin skills for specialized knowledge
 
 ### Pattern: Input Validation
+
 ```markdown
 Validate input: !`echo "$1" | grep -E "^pattern$" && echo "OK" || echo "ERROR"`
 ```
+
 Use for: Validating command arguments
 
 ### Pattern: Resource Validation
+
 ```markdown
-Check exists: !`test -f ${CLAUDE_PLUGIN_ROOT}/path/file && echo "YES" || echo "NO"`
+Check exists: !`test -f ${CODEX_PLUGIN_ROOT}/path/file && echo "YES" || echo "NO"`
 ```
+
 Use for: Verifying required plugin files exist
 
 ---
@@ -485,42 +509,48 @@ Use for: Verifying required plugin files exist
 ### Testing Plugin Commands
 
 1. **Test with plugin installed:**
+
    ```bash
    cd /path/to/plugin
-   codex-cli /command-name args
+   codex /command-name args
    ```
 
-2. **Verify ${CLAUDE_PLUGIN_ROOT} expansion:**
+2. **Verify ${CODEX_PLUGIN_ROOT} expansion:**
+
    ```bash
    # Add debug output to command
-   !`echo "Plugin root: ${CLAUDE_PLUGIN_ROOT}"`
+   !`echo "Plugin root: ${CODEX_PLUGIN_ROOT}"`
    ```
 
 3. **Test across different working directories:**
+
    ```bash
-   cd /tmp && codex-cli /command-name
-   cd /other/project && codex-cli /command-name
+   cd /tmp && codex /command-name
+   cd /other/project && codex /command-name
    ```
 
 4. **Validate resource availability:**
+
    ```bash
    # Check all plugin resources exist
-   !`ls -la ${CLAUDE_PLUGIN_ROOT}/scripts/`
-   !`ls -la ${CLAUDE_PLUGIN_ROOT}/config/`
+   !`ls -la ${CODEX_PLUGIN_ROOT}/scripts/`
+   !`ls -la ${CODEX_PLUGIN_ROOT}/config/`
    ```
 
 ### Common Mistakes to Avoid
 
-1. **Using relative paths instead of ${CLAUDE_PLUGIN_ROOT}:**
+1. **Using relative paths instead of ${CODEX_PLUGIN_ROOT}:**
+
    ```markdown
    # Wrong
    !`node ./scripts/analyze.js`
 
    # Correct
-   !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js`
+   !`node ${CODEX_PLUGIN_ROOT}/scripts/analyze.js`
    ```
 
 2. **Forgetting to allow required tools:**
+
    ```markdown
    # Missing allowed-tools
    !`bash script.sh`  # Will fail without Bash permission
@@ -529,10 +559,11 @@ Use for: Verifying required plugin files exist
    ---
    allowed-tools: Bash(*)
    ---
-   !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/script.sh`
+   !`bash ${CODEX_PLUGIN_ROOT}/scripts/script.sh`
    ```
 
 3. **Not validating inputs:**
+
    ```markdown
    # Risky - no validation
    Deploy to $1 environment
@@ -543,12 +574,13 @@ Use for: Verifying required plugin files exist
    ```
 
 4. **Hardcoding plugin paths:**
+
    ```markdown
    # Wrong - breaks on different installations
-   @/home/user/.codex-cli/plugins/my-plugin/config.json
+   @/home/user/.codex/plugins/my-plugin/config.json
 
    # Correct - works everywhere
-   @${CLAUDE_PLUGIN_ROOT}/config.json
+   @${CODEX_PLUGIN_ROOT}/config.json
    ```
 
 ---

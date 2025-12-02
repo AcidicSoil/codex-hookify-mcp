@@ -6,7 +6,7 @@ A bare-bones plugin with a single command.
 
 ```
 hello-world/
-├── .codex-cli-plugin/
+├── .codex-plugin/
 │   └── plugin.json
 └── commands/
     └── hello.md
@@ -14,7 +14,7 @@ hello-world/
 
 ## File Contents
 
-### .codex-cli-plugin/plugin.json
+### .codex-plugin/plugin.json
 
 ```json
 {
@@ -50,7 +50,7 @@ Include the current timestamp in the greeting to show the command executed succe
 After installing the plugin:
 
 ```
-$ codex-cli
+$ codex
 > /hello
 Hello! This is a simple command from the hello-world plugin.
 
@@ -63,7 +63,7 @@ Executed at: 2025-01-15 14:30:22 UTC
 
 1. **Minimal manifest**: Only the required `name` field
 2. **Single command**: One markdown file in `commands/` directory
-3. **Auto-discovery**: codex-cli Code finds the command automatically
+3. **Auto-discovery**: codex Code finds the command automatically
 4. **No dependencies**: No scripts, hooks, or external resources
 
 ## When to Use This Pattern

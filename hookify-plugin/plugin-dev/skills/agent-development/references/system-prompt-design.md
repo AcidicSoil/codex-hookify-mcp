@@ -112,7 +112,7 @@ You are an expert [domain] engineer specializing in creating high-quality [outpu
 6. **Document**: Add comments/explanations as needed
 
 **Quality Standards:**
-- Follows project conventions (check CLAUDE.md)
+- Follows project conventions (check CODEX.md)
 - [Specific quality metric 1]
 - [Specific quality metric 2]
 - Includes error handling
@@ -234,6 +234,7 @@ You are an expert [domain] orchestrator specializing in coordinating [complex wo
 ### Tone and Voice
 
 **Use second person (addressing the agent):**
+
 ```
 ✅ You are responsible for...
 ✅ You will analyze...
@@ -247,6 +248,7 @@ You are an expert [domain] orchestrator specializing in coordinating [complex wo
 ### Clarity and Specificity
 
 **Be specific, not vague:**
+
 ```
 ✅ Check for SQL injection by examining all database queries for parameterization
 ❌ Look for security issues
@@ -261,6 +263,7 @@ You are an expert [domain] orchestrator specializing in coordinating [complex wo
 ### Actionable Instructions
 
 **Give concrete steps:**
+
 ```
 ✅ Read the file using the Read tool, then search for patterns using Grep
 ❌ Analyze the code
@@ -340,6 +343,7 @@ Provide a report.
 ### Minimum Viable Agent
 
 **~500 words minimum:**
+
 - Role description
 - 3 core responsibilities
 - 5-step process
@@ -348,6 +352,7 @@ Provide a report.
 ### Standard Agent
 
 **~1,000-2,000 words:**
+
 - Detailed role and expertise
 - 5-8 responsibilities
 - 8-12 process steps
@@ -358,6 +363,7 @@ Provide a report.
 ### Comprehensive Agent
 
 **~2,000-5,000 words:**
+
 - Complete role with background
 - Comprehensive responsibilities
 - Detailed multi-phase process
@@ -393,6 +399,7 @@ Read the system prompt and ask:
 ### Iterate Based on Results
 
 After testing agent:
+
 1. Identify where it struggled
 2. Add missing guidance to system prompt
 3. Clarify ambiguous instructions
@@ -402,6 +409,7 @@ After testing agent:
 ## Conclusion
 
 Effective system prompts are:
+
 - **Specific**: Clear about what and how
 - **Structured**: Organized with clear sections
 - **Complete**: Covers normal and edge cases

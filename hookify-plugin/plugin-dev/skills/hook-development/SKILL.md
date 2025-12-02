@@ -1,16 +1,17 @@
 ---
 name: Hook Development
-description: This skill should be used when the user asks to "create a hook", "add a PreToolUse/PostToolUse/Stop hook", "validate tool use", "implement prompt-based hooks", "use ${CLAUDE_PLUGIN_ROOT}", "set up event-driven automation", "block dangerous commands", or mentions hook events (PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification). Provides comprehensive guidance for creating and implementing codex-cli Code plugin hooks with focus on advanced prompt-based hooks API.
+description: This skill should be used when the user asks to "create a hook", "add a PreToolUse/PostToolUse/Stop hook", "validate tool use", "implement prompt-based hooks", "use ${CODEX_PLUGIN_ROOT}", "set up event-driven automation", "block dangerous commands", or mentions hook events (PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification). Provides comprehensive guidance for creating and implementing codex Code plugin hooks with focus on advanced prompt-based hooks API.
 version: 0.1.0
 ---
 
-# Hook Development for codex-cli Code Plugins
+# Hook Development for codex Code Plugins
 
 ## Overview
 
-Hooks are event-driven automation scripts that execute in response to codex-cli Code events. Use hooks to validate operations, enforce policies, add context, and integrate external tools into workflows.
+Hooks are event-driven automation scripts that execute in response to codex Code events. Use hooks to validate operations, enforce policies, add context, and integrate external tools into workflows.
 
 **Key capabilities:**
+
 - Validate tool calls before execution (PreToolUse)
 - React to tool results (PostToolUse)
 - Enforce completion standards (Stop, SubagentStop)
@@ -34,6 +35,7 @@ Use LLM-driven decision making for context-aware validation:
 **Supported events:** Stop, SubagentStop, UserPromptSubmit, PreToolUse
 
 **Benefits:**
+
 - Context-aware decisions based on natural language reasoning
 - Flexible evaluation logic without bash scripting
 - Better edge case handling
@@ -46,12 +48,13 @@ Execute bash commands for deterministic checks:
 ```json
 {
   "type": "command",
-  "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh",
+  "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/validate.sh",
   "timeout": 60
 }
 ```
 
 **Use for:**
+
 - Fast deterministic validations
 - File system operations
 - External tool integrations
@@ -75,11 +78,13 @@ Execute bash commands for deterministic checks:
 ```
 
 **Key points:**
+
 - `description` field is optional
 - `hooks` field is required wrapper containing actual hook events
 - This is the **plugin-specific format**
 
 **Example:**
+
 ```json
 {
   "description": "Validation hooks for code quality",
@@ -90,7 +95,7 @@ Execute bash commands for deterministic checks:
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/validate.sh"
+            "command": "${CODEX_PLUGIN_ROOT}/hooks/validate.sh"
           }
         ]
       }
@@ -101,7 +106,7 @@ Execute bash commands for deterministic checks:
 
 ### Settings Format (Direct)
 
-**For user settings** in `.codex-cli/settings.json`, use direct format:
+**For user settings** in `.codex/settings.json`, use direct format:
 
 ```json
 {
@@ -112,6 +117,7 @@ Execute bash commands for deterministic checks:
 ```
 
 **Key points:**
+
 - No wrapper - events directly at top level
 - No description field
 - This is the **settings format**
@@ -125,6 +131,7 @@ Execute bash commands for deterministic checks:
 Execute before any tool runs. Use to approve, deny, or modify tool calls.
 
 **Example (prompt-based):**
+
 ```json
 {
   "PreToolUse": [
@@ -142,13 +149,14 @@ Execute before any tool runs. Use to approve, deny, or modify tool calls.
 ```
 
 **Output for PreToolUse:**
+
 ```json
 {
   "hookSpecificOutput": {
     "permissionDecision": "allow|deny|ask",
     "updatedInput": {"field": "modified_value"}
   },
-  "systemMessage": "Explanation for codex-cli"
+  "systemMessage": "Explanation for codex"
 }
 ```
 
@@ -157,6 +165,7 @@ Execute before any tool runs. Use to approve, deny, or modify tool calls.
 Execute after tool completes. Use to react to results, provide feedback, or log.
 
 **Example:**
+
 ```json
 {
   "PostToolUse": [
@@ -174,8 +183,9 @@ Execute after tool completes. Use to react to results, provide feedback, or log.
 ```
 
 **Output behavior:**
+
 - Exit 0: stdout shown in transcript
-- Exit 2: stderr fed back to codex-cli
+- Exit 2: stderr fed back to codex
 - systemMessage included in context
 
 ### Stop
@@ -183,6 +193,7 @@ Execute after tool completes. Use to react to results, provide feedback, or log.
 Execute when main agent considers stopping. Use to validate completeness.
 
 **Example:**
+
 ```json
 {
   "Stop": [
@@ -200,6 +211,7 @@ Execute when main agent considers stopping. Use to validate completeness.
 ```
 
 **Decision output:**
+
 ```json
 {
   "decision": "approve|block",
@@ -219,6 +231,7 @@ Similar to Stop hook, but for subagents.
 Execute when user submits a prompt. Use to add context, validate, or block prompts.
 
 **Example:**
+
 ```json
 {
   "UserPromptSubmit": [
@@ -237,9 +250,10 @@ Execute when user submits a prompt. Use to add context, validate, or block promp
 
 ### SessionStart
 
-Execute when codex-cli Code session begins. Use to load context and set environment.
+Execute when codex Code session begins. Use to load context and set environment.
 
 **Example:**
+
 ```json
 {
   "SessionStart": [
@@ -248,7 +262,7 @@ Execute when codex-cli Code session begins. Use to load context and set environm
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/load-context.sh"
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/load-context.sh"
         }
       ]
     }
@@ -256,9 +270,10 @@ Execute when codex-cli Code session begins. Use to load context and set environm
 }
 ```
 
-**Special capability:** Persist environment variables using `$CLAUDE_ENV_FILE`:
+**Special capability:** Persist environment variables using `$CODEX_ENV_FILE`:
+
 ```bash
-echo "export PROJECT_TYPE=nodejs" >> "$CLAUDE_ENV_FILE"
+echo "export PROJECT_TYPE=nodejs" >> "$CODEX_ENV_FILE"
 ```
 
 See `examples/load-context.sh` for complete example.
@@ -273,7 +288,7 @@ Execute before context compaction. Use to add critical information to preserve.
 
 ### Notification
 
-Execute when codex-cli sends notifications. Use to react to user notifications.
+Execute when codex sends notifications. Use to react to user notifications.
 
 ## Hook Output Format
 
@@ -283,18 +298,18 @@ Execute when codex-cli sends notifications. Use to react to user notifications.
 {
   "continue": true,
   "suppressOutput": false,
-  "systemMessage": "Message for codex-cli"
+  "systemMessage": "Message for codex"
 }
 ```
 
 - `continue`: If false, halt processing (default true)
 - `suppressOutput`: Hide output from transcript (default false)
-- `systemMessage`: Message shown to codex-cli
+- `systemMessage`: Message shown to codex
 
 ### Exit Codes
 
 - `0` - Success (stdout shown in transcript)
-- `2` - Blocking error (stderr fed back to codex-cli)
+- `2` - Blocking error (stderr fed back to codex)
 - Other - Non-blocking error
 
 ## Hook Input Format
@@ -323,17 +338,17 @@ Access fields in prompts using `$TOOL_INPUT`, `$TOOL_RESULT`, `$USER_PROMPT`, et
 
 Available in all command hooks:
 
-- `$CLAUDE_PROJECT_DIR` - Project root path
-- `$CLAUDE_PLUGIN_ROOT` - Plugin directory (use for portable paths)
-- `$CLAUDE_ENV_FILE` - SessionStart only: persist env vars here
-- `$CLAUDE_CODE_REMOTE` - Set if running in remote context
+- `$CODEX_PROJECT_DIR` - Project root path
+- `$CODEX_PLUGIN_ROOT` - Plugin directory (use for portable paths)
+- `$CODEX_ENV_FILE` - SessionStart only: persist env vars here
+- `$CODEX_CODE_REMOTE` - Set if running in remote context
 
-**Always use ${CLAUDE_PLUGIN_ROOT} in hook commands for portability:**
+**Always use ${CODEX_PLUGIN_ROOT} in hook commands for portability:**
 
 ```json
 {
   "type": "command",
-  "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh"
+  "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/validate.sh"
 }
 ```
 
@@ -371,7 +386,7 @@ In plugins, define hooks in `hooks/hooks.json`:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/load-context.sh",
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/load-context.sh",
           "timeout": 10
         }
       ]
@@ -387,21 +402,25 @@ Plugin hooks merge with user's hooks and run in parallel.
 ### Tool Name Matching
 
 **Exact match:**
+
 ```json
 "matcher": "Write"
 ```
 
 **Multiple tools:**
+
 ```json
 "matcher": "Read|Write|Edit"
 ```
 
 **Wildcard (all tools):**
+
 ```json
 "matcher": "*"
 ```
 
 **Regex patterns:**
+
 ```json
 "matcher": "mcp__.*__delete.*"  // All MCP delete tools
 ```
@@ -471,11 +490,11 @@ See `examples/validate-write.sh` and `examples/validate-bash.sh` for complete ex
 ```bash
 # GOOD: Quoted
 echo "$file_path"
-cd "$CLAUDE_PROJECT_DIR"
+cd "$CODEX_PROJECT_DIR"
 
 # BAD: Unquoted (injection risk)
 echo $file_path
-cd $CLAUDE_PROJECT_DIR
+cd $CODEX_PROJECT_DIR
 ```
 
 ### Set Appropriate Timeouts
@@ -512,6 +531,7 @@ All matching hooks run **in parallel**:
 ```
 
 **Design implications:**
+
 - Hooks don't see each other's output
 - Non-deterministic ordering
 - Design for independence
@@ -528,10 +548,11 @@ All matching hooks run **in parallel**:
 Create hooks that activate conditionally by checking for a flag file or configuration:
 
 **Pattern: Flag file activation**
+
 ```bash
 #!/bin/bash
 # Only active when flag file exists
-FLAG_FILE="$CLAUDE_PROJECT_DIR/.enable-strict-validation"
+FLAG_FILE="$CODEX_PROJECT_DIR/.enable-strict-validation"
 
 if [ ! -f "$FLAG_FILE" ]; then
   # Flag not present, skip validation
@@ -544,10 +565,11 @@ input=$(cat)
 ```
 
 **Pattern: Configuration-based activation**
+
 ```bash
 #!/bin/bash
 # Check configuration for activation
-CONFIG_FILE="$CLAUDE_PROJECT_DIR/.codex-cli/plugin-config.json"
+CONFIG_FILE="$CODEX_PROJECT_DIR/.codex/plugin-config.json"
 
 if [ -f "$CONFIG_FILE" ]; then
   enabled=$(jq -r '.strictMode // false' "$CONFIG_FILE")
@@ -562,6 +584,7 @@ input=$(cat)
 ```
 
 **Use cases:**
+
 - Enable strict validation only when needed
 - Temporary debugging hooks
 - Project-specific hook behavior
@@ -573,24 +596,27 @@ input=$(cat)
 
 ### Hooks Load at Session Start
 
-**Important:** Hooks are loaded when codex-cli Code session starts. Changes to hook configuration require restarting codex-cli Code.
+**Important:** Hooks are loaded when codex Code session starts. Changes to hook configuration require restarting codex Code.
 
 **Cannot hot-swap hooks:**
+
 - Editing `hooks/hooks.json` won't affect current session
 - Adding new hook scripts won't be recognized
 - Changing hook commands/prompts won't update
-- Must restart codex-cli Code: exit and run `codex-cli` again
+- Must restart codex Code: exit and run `codex` again
 
 **To test hook changes:**
+
 1. Edit hook configuration or scripts
-2. Exit codex-cli Code session
-3. Restart: `codex-cli` or `cc`
+2. Exit codex Code session
+3. Restart: `codex` or `cc`
 4. New hook configuration loads
-5. Test hooks with `codex-cli --debug`
+5. Test hooks with `codex --debug`
 
 ### Hook Validation at Startup
 
-Hooks are validated when codex-cli Code starts:
+Hooks are validated when codex Code starts:
+
 - Invalid JSON in hooks.json causes loading failure
 - Missing scripts cause warnings
 - Syntax errors reported in debug mode
@@ -602,7 +628,7 @@ Use `/hooks` command to review loaded hooks in current session.
 ### Enable Debug Mode
 
 ```bash
-codex-cli --debug
+codex --debug
 ```
 
 Look for hook registration, execution logs, input/output JSON, and timing information.
@@ -613,7 +639,7 @@ Test command hooks directly:
 
 ```bash
 echo '{"tool_name": "Write", "tool_input": {"file_path": "/test"}}' | \
-  bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh
+  bash ${CODEX_PLUGIN_ROOT}/scripts/validate.sh
 
 echo "Exit code: $?"
 ```
@@ -646,8 +672,9 @@ echo "$output" | jq .
 ### Best Practices
 
 **DO:**
+
 - ✅ Use prompt-based hooks for complex logic
-- ✅ Use ${CLAUDE_PLUGIN_ROOT} for portability
+- ✅ Use ${CODEX_PLUGIN_ROOT} for portability
 - ✅ Validate all inputs in command hooks
 - ✅ Quote all bash variables
 - ✅ Set appropriate timeouts
@@ -655,6 +682,7 @@ echo "$output" | jq .
 - ✅ Test hooks thoroughly
 
 **DON'T:**
+
 - ❌ Use hardcoded paths
 - ❌ Trust user input without validation
 - ❌ Create long-running hooks
@@ -690,9 +718,9 @@ Development tools in `scripts/`:
 
 ### External Resources
 
-- **Official Docs**: https://docs.claude.com/en/docs/claude-code/hooks
+- **Official Docs**: <https://docs.claude.com/en/docs/claude-code/hooks>
 - **Examples**: See security-guidance plugin in marketplace
-- **Testing**: Use `codex-cli --debug` for detailed logs
+- **Testing**: Use `codex --debug` for detailed logs
 - **Validation**: Use `jq` to validate hook JSON output
 
 ## Implementation Workflow
@@ -703,10 +731,10 @@ To implement hooks in a plugin:
 2. Decide between prompt-based (flexible) or command (deterministic) hooks
 3. Write hook configuration in `hooks/hooks.json`
 4. For command hooks, create hook scripts
-5. Use ${CLAUDE_PLUGIN_ROOT} for all file references
+5. Use ${CODEX_PLUGIN_ROOT} for all file references
 6. Validate configuration with `scripts/validate-hook-schema.sh hooks/hooks.json`
 7. Test hooks with `scripts/test-hook.sh` before deployment
-8. Test in codex-cli Code with `codex-cli --debug`
+8. Test in codex Code with `codex --debug`
 9. Document hooks in plugin README
 
 Focus on prompt-based hooks for most use cases. Reserve command hooks for performance-critical or deterministic checks.

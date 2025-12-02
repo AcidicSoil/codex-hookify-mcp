@@ -5,7 +5,7 @@ allowed-tools: ["Write", "AskUserQuestion"]
 
 # Create Plugin Settings
 
-This command helps users create a `.codex-cli/my-plugin.local.md` settings file.
+This command helps users create a `.codex/my-plugin.local.md` settings file.
 
 ## Steps
 
@@ -63,7 +63,7 @@ Extract answers from AskUserQuestion result:
 
 ### Step 3: Create Settings File
 
-Use Write tool to create `.codex-cli/my-plugin.local.md`:
+Use Write tool to create `.codex/my-plugin.local.md`:
 
 ```markdown
 ---
@@ -77,21 +77,23 @@ notify_on_errors: true
 
 Your plugin is configured with <mode> validation mode.
 
-To modify settings, edit this file and restart codex-cli Code.
+To modify settings, edit this file and restart codex Code.
 ```
 
 ### Step 4: Inform User
 
 Tell the user:
-- Settings file created at `.codex-cli/my-plugin.local.md`
+
+- Settings file created at `.codex/my-plugin.local.md`
 - Current configuration summary
 - How to edit manually if needed
-- Reminder: Restart codex-cli Code for changes to take effect
+- Reminder: Restart codex Code for changes to take effect
 - Settings file is gitignored (won't be committed)
 
 ## Implementation Notes
 
 Always validate user input before writing:
+
 - Check mode is valid
 - Validate numeric fields are numbers
 - Ensure paths don't have traversal attempts

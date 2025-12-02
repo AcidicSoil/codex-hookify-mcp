@@ -10,7 +10,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 
 **Review Aspects (optional):** "$ARGUMENTS"
 
-## Review Workflow:
+## Review Workflow
 
 1. **Determine Review Scope**
    - Check git status to identify changed files
@@ -65,6 +65,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 7. **Provide Action Plan**
 
    Organize findings:
+
    ```markdown
    # PR Review Summary
 
@@ -87,14 +88,16 @@ Run a comprehensive pull request review using multiple specialized agents, each 
    4. Re-run review after fixes
    ```
 
-## Usage Examples:
+## Usage Examples
 
 **Full review (default):**
+
 ```
 /pr-review-toolkit:review-pr
 ```
 
 **Specific aspects:**
+
 ```
 /pr-review-toolkit:review-pr tests errors
 # Reviews only test coverage and error handling
@@ -107,45 +110,52 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 ```
 
 **Parallel review:**
+
 ```
 /pr-review-toolkit:review-pr all parallel
 # Launches all agents in parallel
 ```
 
-## Agent Descriptions:
+## Agent Descriptions
 
 **comment-analyzer**:
+
 - Verifies comment accuracy vs code
 - Identifies comment rot
 - Checks documentation completeness
 
 **pr-test-analyzer**:
+
 - Reviews behavioral test coverage
 - Identifies critical gaps
 - Evaluates test quality
 
 **silent-failure-hunter**:
+
 - Finds silent failures
 - Reviews catch blocks
 - Checks error logging
 
 **type-design-analyzer**:
+
 - Analyzes type encapsulation
 - Reviews invariant expression
 - Rates type design quality
 
 **code-reviewer**:
-- Checks CLAUDE.md compliance
+
+- Checks CODEX.md compliance
 - Detects bugs and issues
 - Reviews general code quality
 
 **code-simplifier**:
+
 - Simplifies complex code
 - Improves clarity and readability
 - Applies project standards
 - Preserves functionality
 
-## Tips:
+## Tips
 
 - **Run early**: Before creating PR, not after
 - **Focus on changes**: Agents analyze git diff by default
@@ -153,9 +163,10 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 - **Re-run after fixes**: Verify issues are resolved
 - **Use specific reviews**: Target specific aspects when you know the concern
 
-## Workflow Integration:
+## Workflow Integration
 
 **Before committing:**
+
 ```
 1. Write code
 2. Run: /pr-review-toolkit:review-pr code errors
@@ -164,6 +175,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 ```
 
 **Before creating PR:**
+
 ```
 1. Stage all changes
 2. Run: /pr-review-toolkit:review-pr all
@@ -173,6 +185,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 ```
 
 **After PR feedback:**
+
 ```
 1. Make requested changes
 2. Run targeted reviews based on feedback
@@ -180,7 +193,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 4. Push updates
 ```
 
-## Notes:
+## Notes
 
 - Agents run autonomously and return detailed reports
 - Each agent focuses on its specialty for deep analysis

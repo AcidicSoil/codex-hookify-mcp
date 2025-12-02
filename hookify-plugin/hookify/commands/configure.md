@@ -14,11 +14,13 @@ Enable or disable existing hookify rules using an interactive interface.
 ### 1. Find Existing Rules
 
 Use Glob tool to find all hookify rule files:
+
 ```
-pattern: ".codex-cli/hookify.*.local.md"
+pattern: ".codex/hookify.*.local.md"
 ```
 
 If no rules found, inform user:
+
 ```
 No hookify rules configured yet. Use `/hookify` to create your first rule.
 ```
@@ -26,6 +28,7 @@ No hookify rules configured yet. Use `/hookify` to create your first rule.
 ### 2. Read Current State
 
 For each rule file:
+
 - Read the file
 - Extract `name` and `enabled` fields from frontmatter
 - Build list of rules with current state
@@ -61,29 +64,34 @@ Use AskUserQuestion to let user select rules:
 ```
 
 **Option format:**
+
 - Label: `{rule-name} (currently {enabled|disabled})`
 - Description: Brief description from rule's message or pattern
 
 ### 4. Parse User Selection
 
 For each selected rule:
+
 - Determine current state from label (enabled/disabled)
 - Toggle state: enabled → disabled, disabled → enabled
 
 ### 5. Update Rule Files
 
 For each rule to toggle:
+
 - Use Read tool to read current content
 - Use Edit tool to change `enabled: true` to `enabled: false` (or vice versa)
 - Handle both with and without quotes
 
 **Edit pattern for enabling:**
+
 ```
 old_string: "enabled: false"
 new_string: "enabled: true"
 ```
 
 **Edit pattern for disabling:**
+
 ```
 old_string: "enabled: true"
 new_string: "enabled: false"
@@ -111,18 +119,21 @@ Changes apply immediately - no restart needed
 ## Important Notes
 
 - Changes take effect immediately on next tool use
-- You can also manually edit .codex-cli/hookify.*.local.md files
+- You can also manually edit .codex/hookify.*.local.md files
 - To permanently remove a rule, delete its .local.md file
 - Use `/hookify:list` to see all configured rules
 
 ## Edge Cases
 
 **No rules to configure:**
+
 - Show message about using `/hookify` to create rules first
 
 **User selects no rules:**
+
 - Inform that no changes were made
 
 **File read/write errors:**
+
 - Inform user of specific error
 - Suggest manual editing as fallback

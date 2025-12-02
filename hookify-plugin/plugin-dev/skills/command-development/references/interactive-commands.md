@@ -5,6 +5,7 @@ Comprehensive guide to creating commands that gather user feedback and make deci
 ## Overview
 
 Some commands need user input that doesn't work well with simple arguments. For example:
+
 - Choosing between multiple complex options with trade-offs
 - Selecting multiple items from a list
 - Making decisions that require explanation
@@ -14,7 +15,7 @@ For these cases, use the **AskUserQuestion tool** within command execution rathe
 
 ## When to Use AskUserQuestion
 
-### Use AskUserQuestion When:
+### Use AskUserQuestion When
 
 1. **Multiple choice decisions** with explanations needed
 2. **Complex options** that require context to choose
@@ -22,7 +23,7 @@ For these cases, use the **AskUserQuestion tool** within command execution rathe
 4. **Preference gathering** for configuration
 5. **Interactive workflows** that adapt based on answers
 
-### Use Command Arguments When:
+### Use Command Arguments When
 
 1. **Simple values** (file paths, numbers, names)
 2. **Known inputs** user already has
@@ -60,6 +61,7 @@ For these cases, use the **AskUserQuestion tool** within command execution rathe
 ```
 
 **Key points:**
+
 - Users can always choose "Other" to provide custom input (automatic)
 - `multiSelect: true` allows selecting multiple options
 - Options should be 2-4 choices (not more)
@@ -121,7 +123,7 @@ Based on the answers received from AskUserQuestion:
 
 ## Step 3: Generate Configuration
 
-Create `.codex-cli/plugin-name.local.md` with:
+Create `.codex/plugin-name.local.md` with:
 
 \`\`\`yaml
 ---
@@ -201,6 +203,7 @@ Based on confirmed configuration, execute setup steps.
 ### Question Structure
 
 **Good questions:**
+
 ```markdown
 Question: "Which database should we use for this project?"
 Header: "Database"
@@ -211,6 +214,7 @@ Options:
 ```
 
 **Poor questions:**
+
 ```markdown
 Question: "Database?"  // Too vague
 Header: "DB"  // Unclear abbreviation
@@ -222,17 +226,20 @@ Options:
 ### Option Design Best Practices
 
 **Clear labels:**
+
 - Use 1-5 words
 - Specific and descriptive
 - No jargon without context
 
 **Helpful descriptions:**
+
 - Explain what the option means
 - Mention key benefits or trade-offs
 - Help user make informed decision
 - Keep to 1-2 sentences
 
 **Appropriate number:**
+
 - 2-4 options per question
 - Don't overwhelm with too many choices
 - Group related options
@@ -518,6 +525,7 @@ If "Guided":
 ### Multi-Select Guidelines
 
 **Good multi-select use:**
+
 ```markdown
 Question: "Which features do you want to enable?"
 multiSelect: true
@@ -531,6 +539,7 @@ Reason: User might want any combination
 ```
 
 **Bad multi-select use:**
+
 ```markdown
 Question: "Which database engine?"
 multiSelect: true  // ❌ Should be single-select
@@ -590,7 +599,7 @@ allowed-tools: AskUserQuestion, Write, Read
 
 Use AskUserQuestion for core settings.
 
-Save to `.codex-cli/config-partial.yml`
+Save to `.codex/config-partial.yml`
 
 ## Phase 2: Review Core Settings
 
@@ -873,6 +882,7 @@ Options:
 ### Use Both Appropriately
 
 **Arguments for known values:**
+
 ```markdown
 ---
 argument-hint: [project-name]
@@ -887,6 +897,7 @@ Use AskUserQuestion for options that require explanation.
 ```
 
 **Questions for complex choices:**
+
 ```markdown
 Project name from argument: $1
 
@@ -901,17 +912,20 @@ These require explanation, so questions work better than arguments.
 ## Troubleshooting
 
 **Questions not appearing:**
+
 - Verify AskUserQuestion in allowed-tools
 - Check question format is correct
 - Ensure options array has 2-4 items
 
 **User can't make selection:**
+
 - Check option labels are clear
 - Verify descriptions are helpful
 - Consider if too many options
 - Ensure multiSelect setting is correct
 
 **Flow feels confusing:**
+
 - Reduce number of questions
 - Group related questions
 - Add explanation between stages

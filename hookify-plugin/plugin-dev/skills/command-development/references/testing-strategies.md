@@ -11,6 +11,7 @@ Testing commands ensures they work correctly, handle edge cases, and provide goo
 ### Level 1: Syntax and Structure Validation
 
 **What to test:**
+
 - YAML frontmatter syntax
 - Markdown format
 - File location and naming
@@ -19,16 +20,16 @@ Testing commands ensures they work correctly, handle edge cases, and provide goo
 
 ```bash
 # Validate YAML frontmatter
-head -n 20 .codex-cli/commands/my-command.md | grep -A 10 "^---"
+head -n 20 .codex/commands/my-command.md | grep -A 10 "^---"
 
 # Check for closing frontmatter marker
-head -n 20 .codex-cli/commands/my-command.md | grep -c "^---" # Should be 2
+head -n 20 .codex/commands/my-command.md | grep -c "^---" # Should be 2
 
 # Verify file has .md extension
-ls .codex-cli/commands/*.md
+ls .codex/commands/*.md
 
 # Check file is in correct location
-test -f .codex-cli/commands/my-command.md && echo "Found" || echo "Missing"
+test -f .codex/commands/my-command.md && echo "Found" || echo "Missing"
 ```
 
 **Automated validation script:**
@@ -73,6 +74,7 @@ echo "✓ Command file structure valid"
 ### Level 2: Frontmatter Field Validation
 
 **What to test:**
+
 - Field types correct
 - Values in valid ranges
 - Required fields present (if any)
@@ -126,6 +128,7 @@ echo "✓ Frontmatter fields valid"
 ### Level 3: Manual Command Invocation
 
 **What to test:**
+
 - Command appears in `/help`
 - Command executes without errors
 - Output is as expected
@@ -133,8 +136,8 @@ echo "✓ Frontmatter fields valid"
 **Test procedure:**
 
 ```bash
-# 1. Start codex-cli Code
-codex-cli --debug
+# 1. Start codex Code
+codex --debug
 
 # 2. Check command appears in help
 > /help
@@ -149,13 +152,14 @@ codex-cli --debug
 # Verify expected behavior
 
 # 5. Check debug logs
-tail -f ~/.codex-cli/debug-logs/latest
+tail -f ~/.codex/debug-logs/latest
 # Look for errors or warnings
 ```
 
 ### Level 4: Argument Testing
 
 **What to test:**
+
 - Positional arguments work ($1, $2, etc.)
 - $ARGUMENTS captures all arguments
 - Missing arguments handled gracefully
@@ -210,6 +214,7 @@ echo "  Manual test required"
 ### Level 5: File Reference Testing
 
 **What to test:**
+
 - @ syntax loads file contents
 - Non-existent files handled
 - Large files handled appropriately
@@ -246,6 +251,7 @@ rm /tmp/test-file*.txt /tmp/large-file.bin
 ### Level 6: Bash Execution Testing
 
 **What to test:**
+
 - !` commands execute correctly
 - Command output included in prompt
 - Command failures handled
@@ -255,7 +261,7 @@ rm /tmp/test-file*.txt /tmp/large-file.bin
 
 ```bash
 # Create test command with bash execution
-cat > .codex-cli/commands/test-bash.md << 'EOF'
+cat > .codex/commands/test-bash.md << 'EOF'
 ---
 description: Test bash execution
 allowed-tools: Bash(echo:*), Bash(date:*)
@@ -267,7 +273,7 @@ Test output: !`echo "Hello from bash"`
 Analysis of output above...
 EOF
 
-# Test in codex-cli Code
+# Test in codex Code
 > /test-bash
 # Verify:
 # 1. Date appears correctly
@@ -275,7 +281,7 @@ EOF
 # 3. No errors in debug logs
 
 # Test with disallowed command (should fail or be blocked)
-cat > .codex-cli/commands/test-forbidden.md << 'EOF'
+cat > .codex/commands/test-forbidden.md << 'EOF'
 ---
 description: Test forbidden command
 allowed-tools: Bash(echo:*)
@@ -291,6 +297,7 @@ EOF
 ### Level 7: Integration Testing
 
 **What to test:**
+
 - Commands work with other plugin components
 - Commands interact correctly with each other
 - State management works across invocations
@@ -304,7 +311,7 @@ EOF
 # Setup: Command that triggers a hook
 # Test: Invoke command, verify hook executes
 
-# Command: .codex-cli/commands/risky-operation.md
+# Command: .codex/commands/risky-operation.md
 # Hook: PreToolUse that validates the operation
 
 > /risky-operation
@@ -348,7 +355,7 @@ Create a test suite script:
 #!/bin/bash
 # test-commands.sh - Command test suite
 
-TEST_DIR=".codex-cli/commands"
+TEST_DIR=".codex/commands"
 FAILED_TESTS=0
 
 echo "Command Test Suite"
@@ -395,7 +402,7 @@ Validate commands before committing:
 
 echo "Validating commands..."
 
-COMMANDS_CHANGED=$(git diff --cached --name-only | grep "\.codex-cli/commands/.*\.md")
+COMMANDS_CHANGED=$(git diff --cached --name-only | grep "\.codex/commands/.*\.md")
 
 if [ -z "$COMMANDS_CHANGED" ]; then
   echo "No commands changed"
@@ -432,20 +439,20 @@ jobs:
 
       - name: Validate command structure
         run: |
-          for cmd in .codex-cli/commands/*.md; do
+          for cmd in .codex/commands/*.md; do
             echo "Testing: $cmd"
             ./scripts/validate-command.sh "$cmd"
           done
 
       - name: Validate frontmatter
         run: |
-          for cmd in .codex-cli/commands/*.md; do
+          for cmd in .codex/commands/*.md; do
             ./scripts/validate-frontmatter.sh "$cmd"
           done
 
       - name: Check for TODOs
         run: |
-          if grep -r "TODO" .codex-cli/commands/; then
+          if grep -r "TODO" .codex/commands/; then
             echo "ERROR: TODOs found in commands"
             exit 1
           fi
@@ -456,12 +463,14 @@ jobs:
 ### Test Edge Cases
 
 **Empty arguments:**
+
 ```bash
 > /cmd ""
 > /cmd '' ''
 ```
 
 **Special characters:**
+
 ```bash
 > /cmd "arg with spaces"
 > /cmd arg-with-dashes
@@ -471,11 +480,13 @@ jobs:
 ```
 
 **Long arguments:**
+
 ```bash
 > /cmd $(python -c "print('a' * 10000)")
 ```
 
 **Unusual file paths:**
+
 ```bash
 > /cmd ./file
 > /cmd ../file
@@ -484,6 +495,7 @@ jobs:
 ```
 
 **Bash command edge cases:**
+
 ```markdown
 # Commands that might fail
 !`exit 1`
@@ -529,12 +541,12 @@ echo "  - Acceptable threshold: < 3 seconds for fast commands"
 ### Resource Usage Testing
 
 ```bash
-# Monitor codex-cli Code during command execution
+# Monitor codex Code during command execution
 # In terminal 1:
-codex-cli --debug
+codex --debug
 
 # In terminal 2:
-watch -n 1 'ps aux | grep codex-cli'
+watch -n 1 'ps aux | grep codex'
 
 # Execute command and observe:
 # - Memory usage
@@ -594,12 +606,14 @@ Recruit testers:
 Before releasing a command:
 
 ### Structure
+
 - [ ] File in correct location
 - [ ] Correct .md extension
 - [ ] Valid YAML frontmatter (if present)
 - [ ] Markdown syntax correct
 
 ### Functionality
+
 - [ ] Command appears in `/help`
 - [ ] Description is clear
 - [ ] Command executes without errors
@@ -608,6 +622,7 @@ Before releasing a command:
 - [ ] Bash execution works (if used)
 
 ### Edge Cases
+
 - [ ] Missing arguments handled
 - [ ] Invalid arguments detected
 - [ ] Non-existent files handled
@@ -615,12 +630,14 @@ Before releasing a command:
 - [ ] Long inputs handled
 
 ### Integration
+
 - [ ] Works with other commands
 - [ ] Works with hooks (if applicable)
 - [ ] Works with MCP (if applicable)
 - [ ] State management works
 
 ### Quality
+
 - [ ] Performance acceptable
 - [ ] No security issues
 - [ ] Error messages helpful
@@ -628,6 +645,7 @@ Before releasing a command:
 - [ ] Documentation complete
 
 ### Distribution
+
 - [ ] Tested by others
 - [ ] Feedback incorporated
 - [ ] README updated
@@ -641,37 +659,37 @@ Before releasing a command:
 
 ```bash
 # Check file location
-ls -la .codex-cli/commands/my-command.md
+ls -la .codex/commands/my-command.md
 
 # Check permissions
-chmod 644 .codex-cli/commands/my-command.md
+chmod 644 .codex/commands/my-command.md
 
 # Check syntax
-head -n 20 .codex-cli/commands/my-command.md
+head -n 20 .codex/commands/my-command.md
 
-# Restart codex-cli Code
-codex-cli --debug
+# Restart codex Code
+codex --debug
 ```
 
 **Issue: Arguments not substituting**
 
 ```bash
 # Verify syntax
-grep '\$1' .codex-cli/commands/my-command.md
-grep '\$ARGUMENTS' .codex-cli/commands/my-command.md
+grep '\$1' .codex/commands/my-command.md
+grep '\$ARGUMENTS' .codex/commands/my-command.md
 
 # Test with simple command first
-echo "Test: \$1 and \$2" > .codex-cli/commands/test-args.md
+echo "Test: \$1 and \$2" > .codex/commands/test-args.md
 ```
 
 **Issue: Bash commands not executing**
 
 ```bash
 # Check allowed-tools
-grep "allowed-tools" .codex-cli/commands/my-command.md
+grep "allowed-tools" .codex/commands/my-command.md
 
 # Verify command syntax
-grep '!\`' .codex-cli/commands/my-command.md
+grep '!\`' .codex/commands/my-command.md
 
 # Test command manually
 date
@@ -682,7 +700,7 @@ echo "test"
 
 ```bash
 # Check @ syntax
-grep '@' .codex-cli/commands/my-command.md
+grep '@' .codex/commands/my-command.md
 
 # Verify file exists
 ls -la /path/to/referenced/file

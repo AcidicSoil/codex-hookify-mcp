@@ -73,42 +73,50 @@ CHANGELOG:
 ### Documentation Comment Sections
 
 **PURPOSE**: Why the command exists
+
 - Problem it solves
 - Use cases
 - When to use vs when not to use
 
 **USAGE**: Basic syntax
+
 - Command invocation pattern
 - Required vs optional arguments
 - Default values
 
 **ARGUMENTS**: Detailed argument documentation
+
 - Each argument described
 - Type information
 - Valid values/ranges
 - Defaults
 
 **EXAMPLES**: Concrete usage examples
+
 - Common use cases
 - Edge cases
 - Expected outputs
 
 **REQUIREMENTS**: Prerequisites
+
 - Dependencies
 - Permissions
 - Environmental setup
 
 **RELATED COMMANDS**: Connections
+
 - Similar commands
 - Complementary commands
 - Alternative approaches
 
 **TROUBLESHOOTING**: Common issues
+
 - Known problems
 - Solutions
 - Workarounds
 
 **CHANGELOG**: Version history
+
 - What changed when
 - Breaking changes highlighted
 - Migration guidance
@@ -646,7 +654,7 @@ Description of advanced feature.
 
 ## Configuration
 
-Optional configuration file: `.codex-cli/command-name.local.md`
+Optional configuration file: `.codex/command-name.local.md`
 
 \`\`\`markdown
 ---

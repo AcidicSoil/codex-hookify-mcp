@@ -7,8 +7,8 @@ hide-from-slash-command-tool: "true"
 # Cancel Ralph
 
 ```!
-if [[ -f .codex-cli/ralph-loop.local.md ]]; then
-  ITERATION=$(grep '^iteration:' .codex-cli/ralph-loop.local.md | sed 's/iteration: *//')
+if [[ -f .codex/ralph-loop.local.md ]]; then
+  ITERATION=$(grep '^iteration:' .codex/ralph-loop.local.md | sed 's/iteration: *//')
   echo "FOUND_LOOP=true"
   echo "ITERATION=$ITERATION"
 else
@@ -22,5 +22,5 @@ Check the output above:
    - Say "No active Ralph loop found."
 
 2. **If FOUND_LOOP=true**:
-   - Use Bash: `rm .codex-cli/ralph-loop.local.md`
+   - Use Bash: `rm .codex/ralph-loop.local.md`
    - Report: "Cancelled Ralph loop (was at iteration N)" where N is the ITERATION value from above.

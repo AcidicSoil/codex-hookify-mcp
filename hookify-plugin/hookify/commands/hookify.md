@@ -32,11 +32,11 @@ Use the Task tool to launch conversation-analyzer agent:
 {
   "subagent_type": "general-purpose",
   "description": "Analyze conversation for unwanted behaviors",
-  "prompt": "You are analyzing a codex-cli Code conversation to find behaviors the user wants to prevent.
+  "prompt": "You are analyzing a codex Code conversation to find behaviors the user wants to prevent.
 
 Read user messages in the current conversation and identify:
 1. Explicit requests to avoid something (\"don't do X\", \"stop doing Y\")
-2. Corrections or reversions (user fixing codex-cli's actions)
+2. Corrections or reversions (user fixing codex's actions)
 3. Frustrated reactions (\"why did you do X?\", \"I didn't ask for that\")
 4. Repeated issues (same problem multiple times)
 
@@ -81,7 +81,7 @@ After gathering behaviors (from arguments or agent), present to user using AskUs
 
 ### Step 3: Generate Rule Files
 
-For each confirmed behavior, create a `.codex-cli/hookify.{rule-name}.local.md` file:
+For each confirmed behavior, create a `.codex/hookify.{rule-name}.local.md` file:
 
 **Rule naming convention:**
 - Use kebab-case
@@ -98,7 +98,7 @@ pattern: {regex pattern}
 action: {warn|block}
 ---
 
-{Message to show codex-cli when rule triggers}
+{Message to show codex when rule triggers}
 ```
 
 **Action values:**
@@ -125,23 +125,23 @@ conditions:
 
 ### Step 4: Create Files and Confirm
 
-**IMPORTANT**: Rule files must be created in the current working directory's `.codex-cli/` folder, NOT the plugin directory.
+**IMPORTANT**: Rule files must be created in the current working directory's `.codex/` folder, NOT the plugin directory.
 
-Use the current working directory (where codex-cli Code was started) as the base path.
+Use the current working directory (where codex Code was started) as the base path.
 
-1. Check if `.codex-cli/` directory exists in current working directory
-   - If not, create it first with: `mkdir -p .codex-cli`
+1. Check if `.codex/` directory exists in current working directory
+   - If not, create it first with: `mkdir -p .codex`
 
-2. Use Write tool to create each `.codex-cli/hookify.{name}.local.md` file
-   - Use relative path from current working directory: `.codex-cli/hookify.{name}.local.md`
-   - The path should resolve to the project's .codex-cli directory, not the plugin's
+2. Use Write tool to create each `.codex/hookify.{name}.local.md` file
+   - Use relative path from current working directory: `.codex/hookify.{name}.local.md`
+   - The path should resolve to the project's .codex directory, not the plugin's
 
 3. Show user what was created:
    ```
    Created 3 hookify rules:
-   - .codex-cli/hookify.dangerous-rm.local.md
-   - .codex-cli/hookify.console-log.local.md
-   - .codex-cli/hookify.sensitive-files.local.md
+   - .codex/hookify.dangerous-rm.local.md
+   - .codex/hookify.console-log.local.md
+   - .codex/hookify.sensitive-files.local.md
 
    These rules will trigger on:
    - dangerous-rm: Bash commands matching "rm -rf"
@@ -184,7 +184,7 @@ Use the current working directory (where codex-cli Code was started) as the base
 1. Analyze: User wants to prevent rm -rf commands
 2. Ask: "Should I block this command or just warn you?"
 3. User selects: "Just warn"
-4. Create `.codex-cli/hookify.dangerous-rm.local.md`:
+4. Create `.codex/hookify.dangerous-rm.local.md`:
    ```markdown
    ---
    name: warn-dangerous-rm
@@ -203,7 +203,7 @@ Use the current working directory (where codex-cli Code was started) as the base
 ## Important Notes
 
 - **No restart needed**: Rules take effect immediately on the next tool use
-- **File location**: Create files in project's `.codex-cli/` directory (current working directory), NOT the plugin's .codex-cli/
+- **File location**: Create files in project's `.codex/` directory (current working directory), NOT the plugin's .codex/
 - **Regex syntax**: Use Python regex syntax (raw strings, no need to escape in YAML)
 - **Action types**: Rules can `warn` (default) or `block` operations
 - **Testing**: Test rules immediately after creating them
@@ -212,12 +212,12 @@ Use the current working directory (where codex-cli Code was started) as the base
 
 **If rule file creation fails:**
 1. Check current working directory with pwd
-2. Ensure `.codex-cli/` directory exists (create with mkdir if needed)
-3. Use absolute path if needed: `{cwd}/.codex-cli/hookify.{name}.local.md`
+2. Ensure `.codex/` directory exists (create with mkdir if needed)
+3. Use absolute path if needed: `{cwd}/.codex/hookify.{name}.local.md`
 4. Verify file was created with Glob or ls
 
 **If rule doesn't trigger after creation:**
-1. Verify file is in project `.codex-cli/` not plugin `.codex-cli/`
+1. Verify file is in project `.codex/` not plugin `.codex/`
 2. Check file with Read tool to ensure pattern is correct
 3. Test pattern with: `python3 -c "import re; print(re.search(r'pattern', 'test text'))"`
 4. Verify `enabled: true` in frontmatter

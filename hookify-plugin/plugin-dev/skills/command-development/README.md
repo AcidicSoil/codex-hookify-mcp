@@ -1,10 +1,11 @@
 # Command Development Skill
 
-Comprehensive guidance on creating codex-cli Code slash commands, including file format, frontmatter options, dynamic arguments, and best practices.
+Comprehensive guidance on creating codex Code slash commands, including file format, frontmatter options, dynamic arguments, and best practices.
 
 ## Overview
 
 This skill provides knowledge about:
+
 - Slash command file format and structure
 - YAML frontmatter configuration fields
 - Dynamic arguments ($ARGUMENTS, $1, $2, etc.)
@@ -12,7 +13,7 @@ This skill provides knowledge about:
 - Bash execution with !` syntax
 - Command organization and namespacing
 - Best practices for command development
-- Plugin-specific features (${CLAUDE_PLUGIN_ROOT}, plugin patterns)
+- Plugin-specific features (${CODEX_PLUGIN_ROOT}, plugin patterns)
 - Integration with plugin components (agents, skills, hooks)
 - Validation patterns and error handling
 
@@ -23,6 +24,7 @@ This skill provides knowledge about:
 Core skill content covering:
 
 **Fundamentals:**
+
 - Command basics and locations
 - File format (Markdown with optional frontmatter)
 - YAML frontmatter fields overview
@@ -34,7 +36,8 @@ Core skill content covering:
 - Troubleshooting
 
 **Plugin-Specific:**
-- ${CLAUDE_PLUGIN_ROOT} environment variable
+
+- ${CODEX_PLUGIN_ROOT} environment variable
 - Plugin command discovery and organization
 - Plugin command patterns (configuration, template, multi-script)
 - Integration with plugin components (agents, skills, hooks)
@@ -52,7 +55,7 @@ Detailed documentation:
 
 - **plugin-features-reference.md**: Plugin-specific command features
   - Plugin command discovery and organization
-  - ${CLAUDE_PLUGIN_ROOT} environment variable usage
+  - ${CODEX_PLUGIN_ROOT} environment variable usage
   - Plugin command patterns (configuration, template, multi-script)
   - Integration with plugin agents, skills, and hooks
   - Validation patterns and error handling
@@ -81,7 +84,8 @@ Practical command examples:
 
 ## When This Skill Triggers
 
-codex-cli Code activates this skill when users:
+codex Code activates this skill when users:
+
 - Ask to "create a slash command" or "add a command"
 - Need to "write a custom command"
 - Want to "define command arguments"
@@ -108,7 +112,7 @@ The skill uses progressive disclosure:
    - simple-commands.md
    - plugin-commands.md
 
-codex-cli loads references and examples as needed based on task.
+codex loads references and examples as needed based on task.
 
 ## Command Basics Quick Reference
 
@@ -129,20 +133,23 @@ Command prompt content with:
 
 ### Locations
 
-- **Project**: `.codex-cli/commands/` (shared with team)
-- **Personal**: `~/.codex-cli/commands/` (your commands)
+- **Project**: `.codex/commands/` (shared with team)
+- **Personal**: `~/.codex/commands/` (your commands)
 - **Plugin**: `plugin-name/commands/` (plugin-specific)
 
 ### Key Features
 
 **Dynamic arguments:**
+
 - `$ARGUMENTS` - All arguments as single string
 - `$1`, `$2`, `$3` - Positional arguments
 
 **File references:**
+
 - `@path/to/file` - Include file contents
 
 **Bash execution:**
+
 - `!`command`` - Execute and include output
 
 ## Frontmatter Fields Quick Reference
@@ -243,11 +250,13 @@ Recent commits: !`git log --oneline -5`
 ## Status
 
 **Completed enhancements:**
-- ✓ Plugin command patterns (${CLAUDE_PLUGIN_ROOT}, discovery, organization)
+
+- ✓ Plugin command patterns (${CODEX_PLUGIN_ROOT}, discovery, organization)
 - ✓ Integration patterns (agents, skills, hooks coordination)
 - ✓ Validation patterns (input, file, resource validation, error handling)
 
 **Remaining enhancements (in progress):**
+
 - Advanced workflows (multi-step command sequences)
 - Testing strategies (how to test commands effectively)
 - Documentation patterns (command documentation best practices)
@@ -256,16 +265,18 @@ Recent commits: !`git log --oneline -5`
 ## Maintenance
 
 To update this skill:
+
 1. Keep SKILL.md focused on core fundamentals
 2. Move detailed specifications to references/
 3. Add new examples/ for different use cases
 4. Update frontmatter when new fields added
 5. Ensure imperative/infinitive form throughout
-6. Test examples work with current codex-cli Code
+6. Test examples work with current codex Code
 
 ## Version History
 
 **v0.1.0** (2025-01-15):
+
 - Initial release with basic command fundamentals
 - Frontmatter field reference
 - 10 simple command examples

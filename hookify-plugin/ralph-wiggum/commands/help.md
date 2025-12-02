@@ -11,20 +11,22 @@ Please explain the following to the user:
 The Ralph Wiggum technique is an iterative development methodology based on continuous AI loops, pioneered by Geoffrey Huntley.
 
 **Core concept:**
+
 ```bash
 while :; do
-  cat PROMPT.md | codex-cli-code --continue
+  cat PROMPT.md | codex-code --continue
 done
 ```
 
-The same prompt is fed to codex-cli repeatedly. The "self-referential" aspect comes from codex-cli seeing its own previous work in the files and git history, not from feeding output back as input.
+The same prompt is fed to codex repeatedly. The "self-referential" aspect comes from codex seeing its own previous work in the files and git history, not from feeding output back as input.
 
 **Each iteration:**
-1. codex-cli receives the SAME prompt
+
+1. codex receives the SAME prompt
 2. Works on the task, modifying files
 3. Tries to exit
 4. Stop hook intercepts and feeds the same prompt again
-5. codex-cli sees its previous work in the files
+5. codex sees its previous work in the files
 6. Iteratively improves until completion
 
 The technique is described as "deterministically bad in an undeterministic world" - failures are predictable, enabling systematic improvement through prompt tuning.
@@ -36,17 +38,20 @@ The technique is described as "deterministically bad in an undeterministic world
 Start a Ralph loop in your current session.
 
 **Usage:**
+
 ```
 /ralph-loop "Refactor the cache layer" --max-iterations 20
 /ralph-loop "Add tests" --completion-promise "TESTS COMPLETE"
 ```
 
 **Options:**
+
 - `--max-iterations <n>` - Max iterations before auto-stop
 - `--completion-promise <text>` - Promise phrase to signal completion
 
 **How it works:**
-1. Creates `.codex-cli/.ralph-loop.local.md` state file
+
+1. Creates `.codex/.ralph-loop.local.md` state file
 2. You work on the task
 3. When you try to exit, stop hook intercepts
 4. Same prompt fed back
@@ -60,13 +65,15 @@ Start a Ralph loop in your current session.
 Cancel an active Ralph loop (removes the loop state file).
 
 **Usage:**
+
 ```
 /cancel-ralph
 ```
 
 **How it works:**
+
 - Checks for active loop state file
-- Removes `.codex-cli/.ralph-loop.local.md`
+- Removes `.codex/.ralph-loop.local.md`
 - Reports cancellation with iteration count
 
 ---
@@ -75,7 +82,7 @@ Cancel an active Ralph loop (removes the loop state file).
 
 ### Completion Promises
 
-To signal completion, codex-cli must output a `<promise>` tag:
+To signal completion, codex must output a `<promise>` tag:
 
 ```
 <promise>TASK COMPLETE</promise>
@@ -85,9 +92,10 @@ The stop hook looks for this specific tag. Without it (or `--max-iterations`), R
 
 ### Self-Reference Mechanism
 
-The "loop" doesn't mean codex-cli talks to itself. It means:
+The "loop" doesn't mean codex talks to itself. It means:
+
 - Same prompt repeated
-- codex-cli's work persists in files
+- codex's work persists in files
 - Each iteration sees previous attempts
 - Builds incrementally toward goal
 
@@ -100,6 +108,7 @@ The "loop" doesn't mean codex-cli talks to itself. It means:
 ```
 
 You'll see Ralph:
+
 - Attempt fixes
 - Run tests
 - See failures
@@ -109,12 +118,14 @@ You'll see Ralph:
 ## When to Use Ralph
 
 **Good for:**
+
 - Well-defined tasks with clear success criteria
 - Tasks requiring iteration and refinement
 - Iterative development with self-correction
 - Greenfield projects
 
 **Not good for:**
+
 - Tasks requiring human judgment or design decisions
 - One-shot operations
 - Tasks with unclear success criteria
@@ -122,5 +133,5 @@ You'll see Ralph:
 
 ## Learn More
 
-- Original technique: https://ghuntley.com/ralph/
-- Ralph Orchestrator: https://github.com/mikeyobrien/ralph-orchestrator
+- Original technique: <https://ghuntley.com/ralph/>
+- Ralph Orchestrator: <https://github.com/mikeyobrien/ralph-orchestrator>

@@ -1,16 +1,17 @@
 ---
 name: Command Development
-description: This skill should be used when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for codex-cli Code.
+description: This skill should be used when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for codex Code.
 version: 0.2.0
 ---
 
-# Command Development for codex-cli Code
+# Command Development for codex Code
 
 ## Overview
 
-Slash commands are frequently-used prompts defined as Markdown files that codex-cli executes during interactive sessions. Understanding command structure, frontmatter options, and dynamic features enables creating powerful, reusable workflows.
+Slash commands are frequently-used prompts defined as Markdown files that codex executes during interactive sessions. Understanding command structure, frontmatter options, and dynamic features enables creating powerful, reusable workflows.
 
 **Key concepts:**
+
 - Markdown file format for commands
 - YAML frontmatter for configuration
 - Dynamic arguments and file references
@@ -21,19 +22,21 @@ Slash commands are frequently-used prompts defined as Markdown files that codex-
 
 ### What is a Slash Command?
 
-A slash command is a Markdown file containing a prompt that codex-cli executes when invoked. Commands provide:
+A slash command is a Markdown file containing a prompt that codex executes when invoked. Commands provide:
+
 - **Reusability**: Define once, use repeatedly
 - **Consistency**: Standardize common workflows
 - **Sharing**: Distribute across team or projects
 - **Efficiency**: Quick access to complex prompts
 
-### Critical: Commands are Instructions FOR codex-cli
+### Critical: Commands are Instructions FOR codex
 
 **Commands are written for agent consumption, not human consumption.**
 
-When a user invokes `/command-name`, the command content becomes codex-cli's instructions. Write commands as directives TO codex-cli about what to do, not as messages TO the user.
+When a user invokes `/command-name`, the command content becomes codex's instructions. Write commands as directives TO codex about what to do, not as messages TO the user.
 
-**Correct approach (instructions for codex-cli):**
+**Correct approach (instructions for codex):**
+
 ```markdown
 Review this code for security vulnerabilities including:
 - SQL injection
@@ -44,28 +47,32 @@ Provide specific line numbers and severity ratings.
 ```
 
 **Incorrect approach (messages to user):**
+
 ```markdown
 This command will review your code for security issues.
 You'll receive a report with vulnerability details.
 ```
 
-The first example tells codex-cli what to do. The second tells the user what will happen but doesn't instruct codex-cli. Always use the first approach.
+The first example tells codex what to do. The second tells the user what will happen but doesn't instruct codex. Always use the first approach.
 
 ### Command Locations
 
 **Project commands** (shared with team):
-- Location: `.codex-cli/commands/`
+
+- Location: `.codex/commands/`
 - Scope: Available in specific project
 - Label: Shown as "(project)" in `/help`
 - Use for: Team workflows, project-specific tasks
 
 **Personal commands** (available everywhere):
-- Location: `~/.codex-cli/commands/`
+
+- Location: `~/.codex/commands/`
 - Scope: Available in all projects
 - Label: Shown as "(user)" in `/help`
 - Use for: Personal workflows, cross-project utilities
 
 **Plugin commands** (bundled with plugins):
+
 - Location: `plugin-name/commands/`
 - Scope: Available when plugin installed
 - Label: Shown as "(plugin-name)" in `/help`
@@ -78,13 +85,14 @@ The first example tells codex-cli what to do. The second tells the user what wil
 Commands are Markdown files with `.md` extension:
 
 ```
-.codex-cli/commands/
+.codex/commands/
 ├── review.md           # /review command
 ├── test.md             # /test command
 └── deploy.md           # /deploy command
 ```
 
 **Simple command:**
+
 ```markdown
 Review this code for security vulnerabilities including:
 - SQL injection
@@ -138,6 +146,7 @@ allowed-tools: Read, Write, Edit, Bash(git:*)
 ```
 
 **Patterns:**
+
 - `Read, Write, Edit` - Specific tools
 - `Bash(git:*)` - Bash with git commands only
 - `*` - All tools (rarely needed)
@@ -157,6 +166,7 @@ model: haiku
 ```
 
 **Use cases:**
+
 - `haiku` - Fast, simple commands
 - `sonnet` - Standard workflows
 - `opus` - Complex analysis
@@ -174,6 +184,7 @@ argument-hint: [pr-number] [priority] [assignee]
 ```
 
 **Benefits:**
+
 - Helps users understand command arguments
 - Improves command discovery
 - Documents command interface
@@ -208,12 +219,14 @@ Fix issue #$ARGUMENTS following our coding standards and best practices.
 ```
 
 **Usage:**
+
 ```
 > /fix-issue 123
 > /fix-issue 456
 ```
 
 **Expands to:**
+
 ```
 Fix issue #123 following our coding standards...
 Fix issue #456 following our coding standards...
@@ -234,11 +247,13 @@ After review, assign to $3 for follow-up.
 ```
 
 **Usage:**
+
 ```
 > /review-pr 123 high alice
 ```
 
 **Expands to:**
+
 ```
 Review pull request #123 with priority level high.
 After review, assign to alice for follow-up.
@@ -253,11 +268,13 @@ Deploy $1 to $2 environment with options: $3
 ```
 
 **Usage:**
+
 ```
 > /deploy api staging --force --skip-tests
 ```
 
 **Expands to:**
+
 ```
 Deploy api to staging environment with options: --force --skip-tests
 ```
@@ -281,11 +298,12 @@ Review @$1 for:
 ```
 
 **Usage:**
+
 ```
 > /review-file src/api/users.ts
 ```
 
-**Effect:** codex-cli reads `src/api/users.ts` before processing command
+**Effect:** codex reads `src/api/users.ts` before processing command
 
 ### Multiple File References
 
@@ -315,9 +333,10 @@ Ensure:
 
 ## Bash Execution in Commands
 
-Commands can execute bash commands inline to dynamically gather context before codex-cli processes the command. This is useful for including repository state, environment information, or project-specific context.
+Commands can execute bash commands inline to dynamically gather context before codex processes the command. This is useful for including repository state, environment information, or project-specific context.
 
 **When to use:**
+
 - Include dynamic context (git status, environment vars, etc.)
 - Gather project/repository state
 - Build context-aware workflows
@@ -332,7 +351,7 @@ For complete syntax, examples, and best practices, see `references/plugin-featur
 Simple organization for small command sets:
 
 ```
-.codex-cli/commands/
+.codex/commands/
 ├── build.md
 ├── test.md
 ├── deploy.md
@@ -347,7 +366,7 @@ Simple organization for small command sets:
 Organize commands in subdirectories:
 
 ```
-.codex-cli/commands/
+.codex/commands/
 ├── ci/
 │   ├── build.md        # /build (project:ci)
 │   ├── test.md         # /test (project:ci)
@@ -361,6 +380,7 @@ Organize commands in subdirectories:
 ```
 
 **Benefits:**
+
 - Logical grouping by category
 - Namespace shown in `/help`
 - Easier to find related commands
@@ -502,23 +522,27 @@ PR #$1 Workflow:
 ## Troubleshooting
 
 **Command not appearing:**
+
 - Check file is in correct directory
 - Verify `.md` extension present
 - Ensure valid Markdown format
-- Restart codex-cli Code
+- Restart codex Code
 
 **Arguments not working:**
+
 - Verify `$1`, `$2` syntax correct
 - Check `argument-hint` matches usage
 - Ensure no extra spaces
 
 **Bash execution failing:**
+
 - Check `allowed-tools` includes Bash
 - Verify command syntax in backticks
 - Test command in terminal first
 - Check for required permissions
 
 **File references not working:**
+
 - Verify `@` syntax correct
 - Check file path is valid
 - Ensure Read tool allowed
@@ -526,11 +550,12 @@ PR #$1 Workflow:
 
 ## Plugin-Specific Features
 
-### CLAUDE_PLUGIN_ROOT Variable
+### CODEX_PLUGIN_ROOT Variable
 
-Plugin commands have access to `${CLAUDE_PLUGIN_ROOT}`, an environment variable that resolves to the plugin's absolute path.
+Plugin commands have access to `${CODEX_PLUGIN_ROOT}`, an environment variable that resolves to the plugin's absolute path.
 
 **Purpose:**
+
 - Reference plugin files portably
 - Execute plugin scripts
 - Load plugin configuration
@@ -544,7 +569,7 @@ description: Analyze using plugin script
 allowed-tools: Bash(node:*)
 ---
 
-Run analysis: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js $1`
+Run analysis: !`node ${CODEX_PLUGIN_ROOT}/scripts/analyze.js $1`
 
 Review results and report findings.
 ```
@@ -553,19 +578,20 @@ Review results and report findings.
 
 ```markdown
 # Execute plugin script
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/script.sh`
+!`bash ${CODEX_PLUGIN_ROOT}/scripts/script.sh`
 
 # Load plugin configuration
-@${CLAUDE_PLUGIN_ROOT}/config/settings.json
+@${CODEX_PLUGIN_ROOT}/config/settings.json
 
 # Use plugin template
-@${CLAUDE_PLUGIN_ROOT}/templates/report.md
+@${CODEX_PLUGIN_ROOT}/templates/report.md
 
 # Access plugin resources
-@${CLAUDE_PLUGIN_ROOT}/docs/reference.md
+@${CODEX_PLUGIN_ROOT}/docs/reference.md
 ```
 
 **Why use it:**
+
 - Works across all installations
 - Portable between systems
 - No hardcoded paths needed
@@ -586,12 +612,14 @@ plugin-name/
 ```
 
 **Namespace benefits:**
+
 - Logical command grouping
 - Shown in `/help` output
 - Avoid name conflicts
 - Organize related commands
 
 **Naming conventions:**
+
 - Use descriptive action names
 - Avoid generic names (test, run)
 - Consider plugin-specific prefix
@@ -608,7 +636,7 @@ argument-hint: [environment]
 allowed-tools: Read, Bash(*)
 ---
 
-Load configuration: @${CLAUDE_PLUGIN_ROOT}/config/$1-deploy.json
+Load configuration: @${CODEX_PLUGIN_ROOT}/config/$1-deploy.json
 
 Deploy to $1 using configuration settings.
 Monitor deployment and report status.
@@ -622,7 +650,7 @@ description: Generate docs from template
 argument-hint: [component]
 ---
 
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/docs.md
+Template: @${CODEX_PLUGIN_ROOT}/templates/docs.md
 
 Generate documentation for $1 following template structure.
 ```
@@ -635,9 +663,9 @@ description: Complete build workflow
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh`
-Test: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test.sh`
-Package: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/package.sh`
+Build: !`bash ${CODEX_PLUGIN_ROOT}/scripts/build.sh`
+Test: !`bash ${CODEX_PLUGIN_ROOT}/scripts/test.sh`
+Package: !`bash ${CODEX_PLUGIN_ROOT}/scripts/package.sh`
 
 Review outputs and report workflow status.
 ```
@@ -667,13 +695,14 @@ The agent will analyze:
 - Best practices
 
 Agent uses plugin resources:
-- ${CLAUDE_PLUGIN_ROOT}/config/rules.json
-- ${CLAUDE_PLUGIN_ROOT}/checklists/review.md
+- ${CODEX_PLUGIN_ROOT}/config/rules.json
+- ${CODEX_PLUGIN_ROOT}/checklists/review.md
 ```
 
 **Key points:**
+
 - Agent must exist in `plugin/agents/` directory
-- codex-cli uses Task tool to launch agent
+- codex uses Task tool to launch agent
 - Document agent capabilities
 - Reference plugin resources agent uses
 
@@ -699,6 +728,7 @@ Generate production-ready API docs.
 ```
 
 **Key points:**
+
 - Skill must exist in `plugin/skills/` directory
 - Mention skill name to trigger invocation
 - Document skill purpose
@@ -707,10 +737,11 @@ Generate production-ready API docs.
 ### Hook Coordination
 
 Design commands that work with plugin hooks:
+
 - Commands can prepare state for hooks to process
 - Hooks execute automatically on tool events
 - Commands should document expected hook behavior
-- Guide codex-cli on interpreting hook output
+- Guide codex on interpreting hook output
 
 See `references/plugin-features-reference.md` for examples of commands that coordinate with hooks
 
@@ -728,7 +759,7 @@ allowed-tools: Bash(node:*), Read
 Target: @$1
 
 Phase 1 - Static Analysis:
-!`node ${CLAUDE_PLUGIN_ROOT}/scripts/lint.js $1`
+!`node ${CODEX_PLUGIN_ROOT}/scripts/lint.js $1`
 
 Phase 2 - Deep Review:
 Launch code-reviewer agent for detailed analysis.
@@ -737,12 +768,13 @@ Phase 3 - Standards Check:
 Use coding-standards skill for validation.
 
 Phase 4 - Report:
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/review.md
+Template: @${CODEX_PLUGIN_ROOT}/templates/review.md
 
 Compile findings into report following template.
 ```
 
 **When to use:**
+
 - Complex multi-step workflows
 - Leverage multiple plugin capabilities
 - Require specialized analysis
@@ -796,8 +828,8 @@ allowed-tools: Bash(test:*)
 ---
 
 Validate plugin setup:
-- Script: !`test -x ${CLAUDE_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
-- Config: !`test -f ${CLAUDE_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
+- Script: !`test -x ${CODEX_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
+- Config: !`test -f ${CODEX_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
 
 If all checks pass, run analysis.
 Otherwise, report missing components.
@@ -811,7 +843,7 @@ description: Build with error handling
 allowed-tools: Bash(*)
 ---
 
-Execute build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
+Execute build: !`bash ${CODEX_PLUGIN_ROOT}/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
 
 If build succeeded:
   Report success and output location
@@ -822,6 +854,7 @@ If build failed:
 ```
 
 **Best practices:**
+
 - Validate early in command
 - Provide helpful error messages
 - Suggest corrective actions

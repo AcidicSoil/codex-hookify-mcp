@@ -1,6 +1,6 @@
 # MCP Authentication Patterns
 
-Complete guide to authentication methods for MCP servers in codex-cli Code plugins.
+Complete guide to authentication methods for MCP servers in codex Code plugins.
 
 ## Overview
 
@@ -10,13 +10,13 @@ MCP servers support multiple authentication methods depending on the server type
 
 ### How It Works
 
-codex-cli Code automatically handles the complete OAuth 2.0 flow for SSE and HTTP servers:
+codex Code automatically handles the complete OAuth 2.0 flow for SSE and HTTP servers:
 
 1. User attempts to use MCP tool
-2. codex-cli Code detects authentication needed
+2. codex Code detects authentication needed
 3. Opens browser for OAuth consent
 4. User authorizes in browser
-5. Tokens stored securely by codex-cli Code
+5. Tokens stored securely by codex Code
 6. Automatic token refresh
 
 ### Configuration
@@ -30,11 +30,12 @@ codex-cli Code automatically handles the complete OAuth 2.0 flow for SSE and HTT
 }
 ```
 
-No additional auth configuration needed! codex-cli Code handles everything.
+No additional auth configuration needed! codex Code handles everything.
 
 ### Supported Services
 
 **Known OAuth-enabled MCP servers:**
+
 - Asana: `https://mcp.asana.com/sse`
 - GitHub (when available)
 - Google services (when available)
@@ -45,6 +46,7 @@ No additional auth configuration needed! codex-cli Code handles everything.
 OAuth scopes are determined by the MCP server. Users see required scopes during the consent flow.
 
 **Document required scopes in your README:**
+
 ```markdown
 ## Authentication
 
@@ -56,7 +58,8 @@ This plugin requires the following Asana permissions:
 
 ### Token Storage
 
-Tokens are stored securely by codex-cli Code:
+Tokens are stored securely by codex Code:
+
 - Not accessible to plugins
 - Encrypted at rest
 - Automatic refresh
@@ -65,16 +68,19 @@ Tokens are stored securely by codex-cli Code:
 ### Troubleshooting OAuth
 
 **Authentication loop:**
+
 - Clear cached tokens (sign out and sign in)
 - Check OAuth redirect URLs
 - Verify server OAuth configuration
 
 **Scope issues:**
+
 - User may need to re-authorize for new scopes
 - Check server documentation for required scopes
 
 **Token expiration:**
-- codex-cli Code auto-refreshes
+
+- codex Code auto-refreshes
 - If refresh fails, prompts re-authentication
 
 ## Token-Based Authentication
@@ -84,6 +90,7 @@ Tokens are stored securely by codex-cli Code:
 Most common for HTTP and WebSocket servers.
 
 **Configuration:**
+
 ```json
 {
   "api": {
@@ -97,6 +104,7 @@ Most common for HTTP and WebSocket servers.
 ```
 
 **Environment variable:**
+
 ```bash
 export API_TOKEN="your-secret-token-here"
 ```
@@ -106,6 +114,7 @@ export API_TOKEN="your-secret-token-here"
 Alternative to Bearer tokens, often in custom headers.
 
 **Configuration:**
+
 ```json
 {
   "api": {
@@ -124,6 +133,7 @@ Alternative to Bearer tokens, often in custom headers.
 Services may use custom authentication headers.
 
 **Configuration:**
+
 ```json
 {
   "service": {
@@ -235,12 +245,13 @@ For tokens that change or expire, use a helper script:
   "api": {
     "type": "sse",
     "url": "https://api.example.com",
-    "headersHelper": "${CLAUDE_PLUGIN_ROOT}/scripts/get-headers.sh"
+    "headersHelper": "${CODEX_PLUGIN_ROOT}/scripts/get-headers.sh"
   }
 }
 ```
 
 **Script (get-headers.sh):**
+
 ```bash
 #!/bin/bash
 # Generate dynamic authentication headers
@@ -269,6 +280,7 @@ EOF
 ### DO
 
 ✅ **Use environment variables:**
+
 ```json
 {
   "headers": {
@@ -290,6 +302,7 @@ EOF
 ### DON'T
 
 ❌ **Hardcode tokens:**
+
 ```json
 {
   "headers": {
@@ -313,6 +326,7 @@ EOF
 ### Workspace/Tenant Selection
 
 **Via environment variable:**
+
 ```json
 {
   "api": {
@@ -327,6 +341,7 @@ EOF
 ```
 
 **Via URL:**
+
 ```json
 {
   "api": {
@@ -350,18 +365,21 @@ export TENANT_ID="my-company"
 ### Common Issues
 
 **401 Unauthorized:**
+
 - Check token is set correctly
 - Verify token hasn't expired
 - Check token has required permissions
 - Ensure header format is correct
 
 **403 Forbidden:**
+
 - Token valid but lacks permissions
 - Check scope/permissions
 - Verify workspace/tenant ID
 - May need admin approval
 
 **Token not found:**
+
 ```bash
 # Check environment variable is set
 echo $API_TOKEN
@@ -371,6 +389,7 @@ export API_TOKEN="your-token"
 ```
 
 **Token in wrong format:**
+
 ```json
 // Correct
 "Authorization": "Bearer sk-abc123"
@@ -382,17 +401,20 @@ export API_TOKEN="your-token"
 ### Debugging Authentication
 
 **Enable debug mode:**
+
 ```bash
-codex-cli --debug
+codex --debug
 ```
 
 Look for:
+
 - Authentication header values (sanitized)
 - OAuth flow progress
 - Token refresh attempts
 - Authentication errors
 
 **Test authentication separately:**
+
 ```bash
 # Test HTTP endpoint
 curl -H "Authorization: Bearer $API_TOKEN" \
@@ -406,6 +428,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ### From Hardcoded to Environment Variables
 
 **Before:**
+
 ```json
 {
   "headers": {
@@ -415,6 +438,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ```
 
 **After:**
+
 ```json
 {
   "headers": {
@@ -424,6 +448,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ```
 
 **Migration steps:**
+
 1. Add environment variable to plugin README
 2. Update configuration to use ${VAR}
 3. Test with variable set
@@ -433,6 +458,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ### From Basic Auth to OAuth
 
 **Before:**
+
 ```json
 {
   "headers": {
@@ -442,6 +468,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ```
 
 **After:**
+
 ```json
 {
   "type": "sse",
@@ -450,6 +477,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 ```
 
 **Benefits:**
+
 - Better security
 - No credential management
 - Automatic token refresh
@@ -468,7 +496,7 @@ Some enterprise services require client certificates.
 ```json
 {
   "secure-api": {
-    "command": "${CLAUDE_PLUGIN_ROOT}/servers/mtls-wrapper",
+    "command": "${CODEX_PLUGIN_ROOT}/servers/mtls-wrapper",
     "args": ["--cert", "${CLIENT_CERT}", "--key", "${CLIENT_KEY}"],
     "env": {
       "API_URL": "https://secure.example.com"
@@ -493,7 +521,7 @@ echo "{\"Authorization\": \"Bearer $JWT\"}"
 
 ```json
 {
-  "headersHelper": "${CLAUDE_PLUGIN_ROOT}/scripts/generate-jwt.sh"
+  "headersHelper": "${CODEX_PLUGIN_ROOT}/scripts/generate-jwt.sh"
 }
 ```
 
@@ -541,6 +569,7 @@ EOF
 ## Conclusion
 
 Choose the authentication method that matches your MCP server's requirements:
+
 - **OAuth** for cloud services (easiest for users)
 - **Bearer tokens** for API services
 - **Environment variables** for stdio servers

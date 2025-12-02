@@ -1,7 +1,7 @@
 ---
 description: "Start Ralph Wiggum loop in current session"
 argument-hint: "PROMPT [--max-iterations N] [--completion-promise TEXT]"
-allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh)"]
+allowed-tools: ["Bash(${CODEX_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh)"]
 hide-from-slash-command-tool: "true"
 ---
 
@@ -10,11 +10,11 @@ hide-from-slash-command-tool: "true"
 Execute the setup script to initialize the Ralph loop:
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh" $ARGUMENTS
+"${CODEX_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh" $ARGUMENTS
 
 # Extract and display completion promise if set
-if [ -f .codex-cli/ralph-loop.local.md ]; then
-  PROMISE=$(grep '^completion_promise:' .codex-cli/ralph-loop.local.md | sed 's/completion_promise: *//' | sed 's/^"\(.*\)"$/\1/')
+if [ -f .codex/ralph-loop.local.md ]; then
+  PROMISE=$(grep '^completion_promise:' .codex/ralph-loop.local.md | sed 's/completion_promise: *//' | sed 's/^"\(.*\)"$/\1/')
   if [ -n "$PROMISE" ] && [ "$PROMISE" != "null" ]; then
     echo ""
     echo "═══════════════════════════════════════════════════════════"

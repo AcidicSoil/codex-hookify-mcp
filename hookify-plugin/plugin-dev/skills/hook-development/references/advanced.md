@@ -14,7 +14,7 @@ Combine command and prompt hooks for layered validation:
       "hooks": [
         {
           "type": "command",
-          "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/quick-check.sh",
+          "command": "bash ${CODEX_PLUGIN_ROOT}/scripts/quick-check.sh",
           "timeout": 5
         },
         {
@@ -31,6 +31,7 @@ Combine command and prompt hooks for layered validation:
 **Use case:** Fast deterministic checks followed by intelligent analysis
 
 **Example quick-check.sh:**
+
 ```bash
 #!/bin/bash
 input=$(cat)
@@ -65,11 +66,13 @@ input=$(cat)
 ```
 
 **Use cases:**
+
 - Different behavior in CI vs local development
 - Project-specific validation
 - User-specific rules
 
 **Example: Skip certain checks for trusted users:**
+
 ```bash
 #!/bin/bash
 # Skip detailed checks for admin users
@@ -118,11 +121,11 @@ Modify hook behavior based on project configuration:
 
 ```bash
 #!/bin/bash
-cd "$CLAUDE_PROJECT_DIR" || exit 1
+cd "$CODEX_PROJECT_DIR" || exit 1
 
 # Read project-specific config
-if [ -f ".codex-cli-hooks-config.json" ]; then
-  strict_mode=$(jq -r '.strict_mode' .codex-cli-hooks-config.json)
+if [ -f ".codex-hooks-config.json" ]; then
+  strict_mode=$(jq -r '.strict_mode' .codex-hooks-config.json)
 
   if [ "$strict_mode" = "true" ]; then
     # Apply strict validation
@@ -134,7 +137,8 @@ if [ -f ".codex-cli-hooks-config.json" ]; then
 fi
 ```
 
-**Example .codex-cli-hooks-config.json:**
+**Example .codex-hooks-config.json:**
+
 ```json
 {
   "strict_mode": true,
@@ -231,6 +235,7 @@ All three hooks run simultaneously, reducing total latency.
 Coordinate hooks across different events:
 
 **SessionStart - Set up tracking:**
+
 ```bash
 #!/bin/bash
 # Initialize session tracking
@@ -239,6 +244,7 @@ echo "0" > /tmp/build-count-$$
 ```
 
 **PostToolUse - Track events:**
+
 ```bash
 #!/bin/bash
 input=$(cat)
@@ -254,6 +260,7 @@ fi
 ```
 
 **Stop - Verify based on tracking:**
+
 ```bash
 #!/bin/bash
 test_count=$(cat /tmp/test-count-$$ 2>/dev/null || echo "0")
@@ -355,7 +362,7 @@ tool_name=$(echo "$input" | jq -r '.tool_name')
 timestamp=$(date -Iseconds)
 
 # Append to audit log
-echo "$timestamp | $USER | $tool_name | $input" >> ~/.codex-cli/audit.log
+echo "$timestamp | $USER | $tool_name | $input" >> ~/.codex/audit.log
 
 exit 0
 ```
@@ -410,9 +417,9 @@ Create test scenarios that exercise the full hook workflow:
 #!/bin/bash
 
 # Set up test environment
-export CLAUDE_PROJECT_DIR="/tmp/test-project"
-export CLAUDE_PLUGIN_ROOT="$(pwd)"
-mkdir -p "$CLAUDE_PROJECT_DIR"
+export CODEX_PROJECT_DIR="/tmp/test-project"
+export CODEX_PLUGIN_ROOT="$(pwd)"
+mkdir -p "$CODEX_PROJECT_DIR"
 
 # Test SessionStart hook
 echo '{}' | bash hooks/session-start.sh
@@ -423,7 +430,7 @@ else
 fi
 
 # Clean up
-rm -rf "$CLAUDE_PROJECT_DIR"
+rm -rf "$CODEX_PROJECT_DIR"
 ```
 
 ## Best Practices for Advanced Hooks

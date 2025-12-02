@@ -1,6 +1,6 @@
 # Ralph Wiggum Plugin
 
-Implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in codex-cli Code.
+Implementation of the Ralph Wiggum technique for iterative, self-referential AI development loops in codex Code.
 
 ## What is Ralph?
 
@@ -10,13 +10,13 @@ The technique is named after Ralph Wiggum from The Simpsons, embodying the philo
 
 ### Core Concept
 
-This plugin implements Ralph using a **Stop hook** that intercepts codex-cli's exit attempts:
+This plugin implements Ralph using a **Stop hook** that intercepts codex's exit attempts:
 
 ```bash
 # You run ONCE:
 /ralph-loop "Your task description" --completion-promise "DONE"
 
-# Then codex-cli Code automatically:
+# Then codex Code automatically:
 # 1. Works on the task
 # 2. Tries to exit
 # 3. Stop hook blocks exit
@@ -27,10 +27,11 @@ This plugin implements Ralph using a **Stop hook** that intercepts codex-cli's e
 The loop happens **inside your current session** - you don't need external bash loops. The Stop hook in `hooks/stop-hook.sh` creates the self-referential feedback loop by blocking normal session exit.
 
 This creates a **self-referential feedback loop** where:
+
 - The prompt never changes between iterations
-- codex-cli's previous work persists in files
+- codex's previous work persists in files
 - Each iteration sees modified files and git history
-- codex-cli autonomously improves by reading its own past work in files
+- codex autonomously improves by reading its own past work in files
 
 ## Quick Start
 
@@ -38,7 +39,8 @@ This creates a **self-referential feedback loop** where:
 /ralph-loop "Build a REST API for todos. Requirements: CRUD operations, input validation, tests. Output <promise>COMPLETE</promise> when done." --completion-promise "COMPLETE" --max-iterations 50
 ```
 
-codex-cli will:
+codex will:
+
 - Implement the API iteratively
 - Run tests and see failures
 - Fix bugs based on test output
@@ -52,11 +54,13 @@ codex-cli will:
 Start a Ralph loop in your current session.
 
 **Usage:**
+
 ```bash
 /ralph-loop "<prompt>" --max-iterations <n> --completion-promise "<text>"
 ```
 
 **Options:**
+
 - `--max-iterations <n>` - Stop after N iterations (default: unlimited)
 - `--completion-promise <text>` - Phrase that signals completion
 
@@ -65,6 +69,7 @@ Start a Ralph loop in your current session.
 Cancel the active Ralph loop.
 
 **Usage:**
+
 ```bash
 /cancel-ralph
 ```
@@ -76,6 +81,7 @@ Cancel the active Ralph loop.
 ❌ Bad: "Build a todo API and make it good."
 
 ✅ Good:
+
 ```markdown
 Build a REST API for todos.
 
@@ -92,6 +98,7 @@ When complete:
 ❌ Bad: "Create a complete e-commerce platform."
 
 ✅ Good:
+
 ```markdown
 Phase 1: User authentication (JWT, tests)
 Phase 2: Product catalog (list/search, tests)
@@ -105,6 +112,7 @@ Output <promise>COMPLETE</promise> when all phases done.
 ❌ Bad: "Write code for feature X."
 
 ✅ Good:
+
 ```markdown
 Implement feature X following TDD:
 1. Write failing tests
@@ -138,26 +146,32 @@ Always use `--max-iterations` as a safety net to prevent infinite loops on impos
 Ralph embodies several key principles:
 
 ### 1. Iteration > Perfection
+
 Don't aim for perfect on first try. Let the loop refine the work.
 
 ### 2. Failures Are Data
+
 "Deterministically bad" means failures are predictable and informative. Use them to tune prompts.
 
 ### 3. Operator Skill Matters
+
 Success depends on writing good prompts, not just having a good model.
 
 ### 4. Persistence Wins
+
 Keep trying until success. The loop handles retry logic automatically.
 
 ## When to Use Ralph
 
 **Good for:**
+
 - Well-defined tasks with clear success criteria
 - Tasks requiring iteration and refinement (e.g., getting tests to pass)
 - Greenfield projects where you can walk away
 - Tasks with automatic verification (tests, linters)
 
 **Not good for:**
+
 - Tasks requiring human judgment or design decisions
 - One-shot operations
 - Tasks with unclear success criteria
@@ -171,9 +185,9 @@ Keep trying until success. The loop handles retry logic automatically.
 
 ## Learn More
 
-- Original technique: https://ghuntley.com/ralph/
-- Ralph Orchestrator: https://github.com/mikeyobrien/ralph-orchestrator
+- Original technique: <https://ghuntley.com/ralph/>
+- Ralph Orchestrator: <https://github.com/mikeyobrien/ralph-orchestrator>
 
 ## For Help
 
-Run `/help` in codex-cli Code for detailed command reference and examples.
+Run `/help` in codex Code for detailed command reference and examples.

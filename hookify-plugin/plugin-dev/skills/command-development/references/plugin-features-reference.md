@@ -1,11 +1,11 @@
 # Plugin-Specific Command Features Reference
 
-This reference covers features and patterns specific to commands bundled in codex-cli Code plugins.
+This reference covers features and patterns specific to commands bundled in codex Code plugins.
 
 ## Table of Contents
 
 - [Plugin Command Discovery](#plugin-command-discovery)
-- [CLAUDE_PLUGIN_ROOT Environment Variable](#claude_plugin_root-environment-variable)
+- [CODEX_PLUGIN_ROOT Environment Variable](#claude_plugin_root-environment-variable)
 - [Plugin Command Patterns](#plugin-command-patterns)
 - [Integration with Plugin Components](#integration-with-plugin-components)
 - [Validation Patterns](#validation-patterns)
@@ -14,7 +14,7 @@ This reference covers features and patterns specific to commands bundled in code
 
 ### Auto-Discovery
 
-codex-cli Code automatically discovers commands in plugins using the following locations:
+codex Code automatically discovers commands in plugins using the following locations:
 
 ```
 plugin-name/
@@ -25,6 +25,7 @@ plugin-name/
 ```
 
 **Key points:**
+
 - Commands are discovered at plugin load time
 - No manual registration required
 - Commands appear in `/help` with "(plugin:plugin-name)" label
@@ -46,6 +47,7 @@ plugin-name/
 ```
 
 **Namespace behavior:**
+
 - Subdirectory name becomes namespace
 - Shown as "(plugin:plugin-name:namespace)" in `/help`
 - Helps organize related commands
@@ -54,12 +56,14 @@ plugin-name/
 ### Command Naming Conventions
 
 **Plugin command names should:**
+
 1. Be descriptive and action-oriented
 2. Avoid conflicts with common command names
 3. Use hyphens for multi-word names
 4. Consider prefixing with plugin name for uniqueness
 
 **Examples:**
+
 ```
 Good:
 - /mylyn-sync          (plugin-specific prefix)
@@ -72,13 +76,14 @@ Avoid:
 - /do-stuff           (not descriptive)
 ```
 
-## CLAUDE_PLUGIN_ROOT Environment Variable
+## CODEX_PLUGIN_ROOT Environment Variable
 
 ### Purpose
 
-`${CLAUDE_PLUGIN_ROOT}` is a special environment variable available in plugin commands that resolves to the absolute path of the plugin directory.
+`${CODEX_PLUGIN_ROOT}` is a special environment variable available in plugin commands that resolves to the absolute path of the plugin directory.
 
 **Why it matters:**
+
 - Enables portable paths within plugin
 - Allows referencing plugin files and scripts
 - Works across different installations
@@ -94,12 +99,13 @@ description: Analyze using plugin script
 allowed-tools: Bash(node:*), Read
 ---
 
-Run analysis: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js`
+Run analysis: !`node ${CODEX_PLUGIN_ROOT}/scripts/analyze.js`
 
-Read template: @${CLAUDE_PLUGIN_ROOT}/templates/report.md
+Read template: @${CODEX_PLUGIN_ROOT}/templates/report.md
 ```
 
 **Expands to:**
+
 ```
 Run analysis: !`node /path/to/plugins/plugin-name/scripts/analyze.js`
 
@@ -116,7 +122,7 @@ description: Run custom linter from plugin
 allowed-tools: Bash(node:*)
 ---
 
-Lint results: !`node ${CLAUDE_PLUGIN_ROOT}/bin/lint.js $1`
+Lint results: !`node ${CODEX_PLUGIN_ROOT}/bin/lint.js $1`
 
 Review the linting output and suggest fixes.
 ```
@@ -129,7 +135,7 @@ description: Deploy using plugin configuration
 allowed-tools: Read, Bash(*)
 ---
 
-Configuration: @${CLAUDE_PLUGIN_ROOT}/config/deploy-config.json
+Configuration: @${CODEX_PLUGIN_ROOT}/config/deploy-config.json
 
 Deploy application using the configuration above for $1 environment.
 ```
@@ -141,7 +147,7 @@ Deploy application using the configuration above for $1 environment.
 description: Generate report from template
 ---
 
-Use this template: @${CLAUDE_PLUGIN_ROOT}/templates/api-report.md
+Use this template: @${CODEX_PLUGIN_ROOT}/templates/api-report.md
 
 Generate a report for @$1 following the template format.
 ```
@@ -154,9 +160,9 @@ description: Complete plugin workflow
 allowed-tools: Bash(*), Read
 ---
 
-Step 1 - Prepare: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/prepare.sh $1`
-Step 2 - Config: @${CLAUDE_PLUGIN_ROOT}/config/$1.json
-Step 3 - Execute: !`${CLAUDE_PLUGIN_ROOT}/bin/execute $1`
+Step 1 - Prepare: !`bash ${CODEX_PLUGIN_ROOT}/scripts/prepare.sh $1`
+Step 2 - Config: @${CODEX_PLUGIN_ROOT}/config/$1.json
+Step 3 - Execute: !`${CODEX_PLUGIN_ROOT}/bin/execute $1`
 
 Review results and report status.
 ```
@@ -164,32 +170,35 @@ Review results and report status.
 ### Best Practices
 
 1. **Always use for plugin-internal paths:**
+
    ```markdown
    # Good
-   @${CLAUDE_PLUGIN_ROOT}/templates/foo.md
+   @${CODEX_PLUGIN_ROOT}/templates/foo.md
 
    # Bad
    @./templates/foo.md  # Relative to current directory, not plugin
    ```
 
 2. **Validate file existence:**
+
    ```markdown
    ---
    description: Use plugin config if exists
    allowed-tools: Bash(test:*), Read
    ---
 
-   !`test -f ${CLAUDE_PLUGIN_ROOT}/config.json && echo "exists" || echo "missing"`
+   !`test -f ${CODEX_PLUGIN_ROOT}/config.json && echo "exists" || echo "missing"`
 
-   If config exists, load it: @${CLAUDE_PLUGIN_ROOT}/config.json
+   If config exists, load it: @${CODEX_PLUGIN_ROOT}/config.json
    Otherwise, use defaults...
    ```
 
 3. **Document plugin file structure:**
+
    ```markdown
    <!--
    Plugin structure:
-   ${CLAUDE_PLUGIN_ROOT}/
+   ${CODEX_PLUGIN_ROOT}/
    ├── scripts/analyze.js  (analysis script)
    ├── templates/          (report templates)
    └── config/             (configuration files)
@@ -197,23 +206,27 @@ Review results and report status.
    ```
 
 4. **Combine with arguments:**
+
    ```markdown
-   Run: !`${CLAUDE_PLUGIN_ROOT}/bin/process.sh $1 $2`
+   Run: !`${CODEX_PLUGIN_ROOT}/bin/process.sh $1 $2`
    ```
 
 ### Troubleshooting
 
 **Variable not expanding:**
+
 - Ensure command is loaded from plugin
 - Check bash execution is allowed
-- Verify syntax is exact: `${CLAUDE_PLUGIN_ROOT}`
+- Verify syntax is exact: `${CODEX_PLUGIN_ROOT}`
 
 **File not found errors:**
+
 - Verify file exists in plugin directory
 - Check file path is correct relative to plugin root
 - Ensure file permissions allow reading/execution
 
 **Path with spaces:**
+
 - Bash commands automatically handle spaces
 - File references work with spaces in paths
 - No special quoting needed
@@ -230,7 +243,7 @@ description: Deploy using plugin settings
 allowed-tools: Read, Bash(*)
 ---
 
-Load configuration: @${CLAUDE_PLUGIN_ROOT}/deploy-config.json
+Load configuration: @${CODEX_PLUGIN_ROOT}/deploy-config.json
 
 Deploy to $1 environment using:
 1. Configuration settings above
@@ -252,7 +265,7 @@ description: Generate documentation from template
 argument-hint: [component-name]
 ---
 
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/component-docs.md
+Template: @${CODEX_PLUGIN_ROOT}/templates/component-docs.md
 
 Generate documentation for $1 component following the template structure.
 Include:
@@ -274,9 +287,9 @@ description: Complete build and test workflow
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh`
-Validate: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh`
-Test: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test.sh`
+Build: !`bash ${CODEX_PLUGIN_ROOT}/scripts/build.sh`
+Validate: !`bash ${CODEX_PLUGIN_ROOT}/scripts/validate.sh`
+Test: !`bash ${CODEX_PLUGIN_ROOT}/scripts/test.sh`
 
 Review all outputs and report:
 1. Build status
@@ -297,7 +310,7 @@ description: Deploy based on environment
 argument-hint: [dev|staging|prod]
 ---
 
-Environment config: @${CLAUDE_PLUGIN_ROOT}/config/$1.json
+Environment config: @${CODEX_PLUGIN_ROOT}/config/$1.json
 
 Environment check: !`echo "Deploying to: $1"`
 
@@ -317,10 +330,10 @@ description: Save analysis results to plugin cache
 allowed-tools: Bash(*), Read, Write
 ---
 
-Cache directory: ${CLAUDE_PLUGIN_ROOT}/cache/
+Cache directory: ${CODEX_PLUGIN_ROOT}/cache/
 
 Analyze @$1 and save results to cache:
-!`mkdir -p ${CLAUDE_PLUGIN_ROOT}/cache && date > ${CLAUDE_PLUGIN_ROOT}/cache/last-run.txt`
+!`mkdir -p ${CODEX_PLUGIN_ROOT}/cache && date > ${CODEX_PLUGIN_ROOT}/cache/last-run.txt`
 
 Store analysis for future reference and comparison.
 ```
@@ -351,8 +364,9 @@ Note: This uses the Task tool to launch the plugin's code-analyzer agent.
 ```
 
 **Key points:**
+
 - Agent must be defined in plugin's `agents/` directory
-- codex-cli will automatically use Task tool to launch agent
+- codex will automatically use Task tool to launch agent
 - Agent has access to same plugin resources
 
 ### Invoking Plugin Skills
@@ -378,8 +392,9 @@ Note: This leverages the plugin's api-docs-standards skill for consistency.
 ```
 
 **Key points:**
+
 - Skill must be defined in plugin's `skills/` directory
-- Mention skill by name to hint codex-cli should invoke it
+- Mention skill by name to hint codex should invoke it
 - Skills provide specialized domain knowledge
 
 ### Coordinating with Plugin Hooks
@@ -401,6 +416,7 @@ Review hook output for any issues.
 ```
 
 **Key points:**
+
 - Hooks execute automatically on events
 - Commands can prepare state for hooks
 - Document hook interaction in command
@@ -420,7 +436,7 @@ File to review: @$1
 Execute comprehensive review:
 
 1. **Static Analysis** (via plugin scripts)
-   !`node ${CLAUDE_PLUGIN_ROOT}/scripts/lint.js $1`
+   !`node ${CODEX_PLUGIN_ROOT}/scripts/lint.js $1`
 
 2. **Deep Review** (via plugin agent)
    Launch the code-reviewer agent for detailed analysis.
@@ -429,7 +445,7 @@ Execute comprehensive review:
    Use the code-standards skill to ensure compliance.
 
 4. **Documentation** (via plugin template)
-   Template: @${CLAUDE_PLUGIN_ROOT}/templates/review-report.md
+   Template: @${CODEX_PLUGIN_ROOT}/templates/review-report.md
 
 Generate final report combining all outputs.
 ```
@@ -457,6 +473,7 @@ $IF($1 in [dev, staging, prod],
 ```
 
 **Validation approaches:**
+
 1. Bash validation using grep/test
 2. Inline validation in prompt
 3. Script-based validation
@@ -510,9 +527,9 @@ allowed-tools: Bash(test:*)
 ---
 
 Validate plugin setup:
-- Config exists: !`test -f ${CLAUDE_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
-- Scripts exist: !`test -d ${CLAUDE_PLUGIN_ROOT}/scripts && echo "✓" || echo "✗"`
-- Tools available: !`test -x ${CLAUDE_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
+- Config exists: !`test -f ${CODEX_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
+- Scripts exist: !`test -d ${CODEX_PLUGIN_ROOT}/scripts && echo "✓" || echo "✗"`
+- Tools available: !`test -x ${CODEX_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
 
 If all checks pass, proceed with analysis.
 Otherwise, report missing components and installation steps.
@@ -528,7 +545,7 @@ description: Build and validate output
 allowed-tools: Bash(*)
 ---
 
-Build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh`
+Build: !`bash ${CODEX_PLUGIN_ROOT}/scripts/build.sh`
 
 Validate output:
 - Exit code: !`echo $?`
@@ -548,7 +565,7 @@ description: Process file with error handling
 argument-hint: [file-path]
 ---
 
-Try processing: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/process.js $1 2>&1 || echo "ERROR: $?"`
+Try processing: !`node ${CODEX_PLUGIN_ROOT}/scripts/process.js $1 2>&1 || echo "ERROR: $?"`
 
 If processing succeeded:
 - Report results
@@ -562,9 +579,9 @@ If processing failed:
 
 ## Best Practices Summary
 
-### Plugin Commands Should:
+### Plugin Commands Should
 
-1. **Use ${CLAUDE_PLUGIN_ROOT} for all plugin-internal paths**
+1. **Use ${CODEX_PLUGIN_ROOT} for all plugin-internal paths**
    - Scripts, templates, configuration, resources
 
 2. **Validate inputs early**

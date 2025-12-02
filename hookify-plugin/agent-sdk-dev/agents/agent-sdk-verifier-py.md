@@ -12,7 +12,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 1. **SDK Installation and Configuration**:
 
-   - Verify `codex-cli-agent-sdk` is installed (check requirements.txt, pyproject.toml, or pip list)
+   - Verify `codex-agent-sdk` is installed (check requirements.txt, pyproject.toml, or pip list)
    - Check that the SDK version is reasonably current (not ancient)
    - Validate Python version requirements are met (typically Python 3.8+)
    - Confirm virtual environment is recommended/documented if applicable
@@ -88,7 +88,7 @@ Your verification should prioritize SDK functionality and best practices over ge
 
 2. **Check SDK Documentation Adherence**:
 
-   - Use WebFetch to reference the official Python SDK docs: https://docs.claude.com/en/api/agent-sdk/python
+   - Use WebFetch to reference the official Python SDK docs: <https://docs.claude.com/en/api/agent-sdk/python>
    - Compare the implementation against official patterns and recommendations
    - Note any deviations from documented best practices
 
